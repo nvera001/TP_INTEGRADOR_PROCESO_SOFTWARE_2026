@@ -15,7 +15,7 @@ public class LectorTXT {
             String linea = br.readLine();
 
             while (linea != null) {
-                cadena += linea.trim();
+                cadena += linea.trim() + "\n";
                 linea = br.readLine();
             }
             br.close();

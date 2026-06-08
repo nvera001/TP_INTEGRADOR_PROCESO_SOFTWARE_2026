@@ -2,6 +2,8 @@ package Modelo.Nucleo;
 
 import Modelo.Entidades.CajaSimple;
 import Modelo.Entidades.GameObject;
+import Modelo.Entidades.Jugador;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +81,23 @@ public class Matriz {
             }
             System.out.println();
         }
+    }
+
+    // Agrega este método dentro de tu clase Matriz
+    public Jugador obtenerJugador() {
+        for (int y = 0; y < filas; y++) {
+            for (int x = 0; x < columnas; x++) {
+                GameObject obj = grilla[y][x];
+
+                // Si encontramos un objeto que sea de la clase Jugador, lo devolvemos
+                if (obj instanceof Jugador) {
+                    return (Jugador) obj;
+                }
+            }
+        }
+        // Retorna null si por algún motivo el mapa cargado no tenía un jugador
+        System.out.println("ADVERTENCIA: No se encontró ningún jugador en el mapa.");
+        return null;
     }
 }
 

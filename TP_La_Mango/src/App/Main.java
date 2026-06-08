@@ -1,9 +1,10 @@
 package App;
 
-import Modelo.Nucleo.Matriz;
-import Modelo.Nucleo.Posicion;
-import Modelo.Entidades.*;
 import Controlador.GestorJuego;
+import Modelo.Archivos.LectorTXT;
+import Modelo.Entidades.Jugador;
+import Modelo.Fabricas.GeneradorNivel;
+import Modelo.Nucleo.Matriz;
 import Vista.VentanaPrincipal;
 import javax.swing.SwingUtilities;
 
@@ -11,28 +12,29 @@ public class Main {
     public static void main(String[] args) {
         // Ejecución segura de interfaces Swing
         SwingUtilities.invokeLater(() -> {
-            Matriz mapa = new Matriz(5, 5);
 
-            
-            // Armamos el escenario de prueba
-            mapa.colocarObjeto(new ParedSimple(new Posicion(0, 0)));
-            mapa.colocarObjeto(new ParedSimple(new Posicion(1, 0)));
-            mapa.colocarObjeto(new ParedSimple(new Posicion(4, 4)));
+            // 1. Instanciar el lector y cargar el mapa (agregadas las comillas)
+            LectorTXT lector = new LectorTXT();
+            lector.cargarArchivo("TP_La_Mango/src/Modelo/Mapas/mapa.txt");
+            String datosDelMapa = lector.getCadena();
 
-            mapa.registrarMeta(new Posicion(4, 2));
+            // 2. Generar el nivel y guardar la Matriz resultante
+            GeneradorNivel generador = new GeneradorNivel();
+            Matriz tablero = generador.generarMatrizDesdeString(datosDelMapa);
 
-            Jugador jugador = new Jugador(new Posicion(2, 2));
-            mapa.colocarObjeto(jugador);
-            mapa.colocarObjeto(new CajaSimple(new Posicion(3, 2)));
+            Jugador jugador = tablero.obtenerJugador();
+            // 3. Inicializar el Controlador
+            // (Asumiendo que tu GestorJuego necesita conocer el tablero para mover las cosas)
+            GestorJuego gestor = new GestorJuego(tablero, jugador);
 
-            // Instanciamos el controlador
-            GestorJuego gestor = new GestorJuego(mapa, jugador);
+            // 4. Inicializar la Vista
+            // Aquí usamos la firma de tu captura: recibe el gestor (para el teclado) y la matriz (para dibujar)
+            VentanaPrincipal ventana = new VentanaPrincipal(gestor, tablero);
 
-            // Levantamos la vista
-            VentanaPrincipal ventana = new VentanaPrincipal(gestor, mapa);
-            gestor.setVentana(ventana); // Conectamos controlador -> vista
-            
+            // 5. Mostrar la ventana y pedir el foco para que el KeyListener funcione
             ventana.setVisible(true);
+            ventana.requestFocusInWindow();
+
         });
     }
 }

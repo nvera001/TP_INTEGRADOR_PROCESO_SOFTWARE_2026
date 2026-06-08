@@ -30,6 +30,7 @@ public class VentanaPrincipal extends JFrame {
                     case KeyEvent.VK_LEFT -> gestor.intentarMover(Direccion.IZQUIERDA);
                     case KeyEvent.VK_RIGHT -> gestor.intentarMover(Direccion.DERECHA);
                 }
+                actualizarPantalla();
             }
         });
     }

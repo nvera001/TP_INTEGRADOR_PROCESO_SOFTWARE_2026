@@ -1,8 +1,10 @@
 package Modelo.Archivos;
 
 import Modelo.Entidades.GameObject;
+import Modelo.Entidades.Jugador;
 import Modelo.Fabricas.CreadorCajaSimple;
 import Modelo.Fabricas.CreadorGameObject;
+import Modelo.Fabricas.CreadorJugador;
 import Modelo.Fabricas.CreadorParedSimple;
 import Modelo.Nucleo.Posicion;
 
@@ -17,10 +19,11 @@ public class TraductorTXT {
         diccionarioCadenas = new HashMap<>();
         CreadorCajaSimple ccs = new CreadorCajaSimple();
         CreadorParedSimple cps = new CreadorParedSimple();
+        CreadorJugador cjugador = new CreadorJugador();
 
         diccionarioCadenas.put('#', cps);
         diccionarioCadenas.put('C', ccs);
-        // Si tienes más objetos, los vas agregando aquí
+        diccionarioCadenas.put('P', cjugador);
     }
 
     // Método refactorizado para devolver el GameObject o null si es espacio vacío

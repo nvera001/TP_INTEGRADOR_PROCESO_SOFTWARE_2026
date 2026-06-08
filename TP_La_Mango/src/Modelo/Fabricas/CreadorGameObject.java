@@ -1,7 +1,8 @@
 package Modelo.Fabricas;
 
 import Modelo.Entidades.GameObject;
+import Modelo.Nucleo.Posicion;
 
 public interface CreadorGameObject {
-    GameObject crearGameObject(int x, int y);
+    GameObject crearGameObject(Posicion posicion);
 }

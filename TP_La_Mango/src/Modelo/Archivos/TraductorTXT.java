@@ -1,15 +1,16 @@
 package Modelo.Archivos;
 
+import Modelo.Entidades.GameObject;
 import Modelo.Fabricas.CreadorCajaSimple;
 import Modelo.Fabricas.CreadorGameObject;
 import Modelo.Fabricas.CreadorParedSimple;
+import Modelo.Nucleo.Posicion;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TraductorTXT {
 
-    // Nuestro diccionario que vincula un carácter con una función creadora
     private Map<Character, CreadorGameObject> diccionarioCadenas;
 
     public TraductorTXT() {
@@ -17,18 +18,22 @@ public class TraductorTXT {
         CreadorCajaSimple ccs = new CreadorCajaSimple();
         CreadorParedSimple cps = new CreadorParedSimple();
 
-        diccionarioCadenas.put('#', (x, y) -> cps.crearGameObject(x, y));
-        diccionarioCadenas.put('C', (x, y) -> ccs.crearGameObject(x, y));
-        diccionarioCadenas.put('E', (x, y) -> {});
+        diccionarioCadenas.put('#', cps);
+        diccionarioCadenas.put('C', ccs);
+        // Si tienes más objetos, los vas agregando aquí
     }
 
-    public void instanciarDesdeCaracter(char c, int x, int y) {
+    // Método refactorizado para devolver el GameObject o null si es espacio vacío
+    public GameObject instanciarDesdeCaracter(char c, Posicion pos) {
         CreadorGameObject creador = diccionarioCadenas.get(c);
 
         if (creador != null) {
-            creador.crearGameObject(x, y);
-        } else if (c != '\n' && c != '\r') {
+            return creador.crearGameObject(pos);
+        } else if (c != '.' && c != ' ' && c != '\n' && c != '\r') {
+            // Ignoramos puntos, espacios y saltos de línea silenciosamente
             System.out.println("Error: Carácter desconocido en el mapa -> " + c);
         }
+
+        return null; // Retorna null si es un espacio vacío o un carácter no reconocido
     }
 }

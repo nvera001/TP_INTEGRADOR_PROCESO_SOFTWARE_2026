@@ -1,17 +1,35 @@
 package App;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import Controlador.GestorJuego;
+import Modelo.Entidades.*;
+import Modelo.Nucleo.Matriz;
+import Modelo.Nucleo.Posicion;
+import Vista.VentanaPrincipal;
+import javax.swing.SwingUtilities;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        // Ejecución segura de interfaces Swing
+        SwingUtilities.invokeLater(() -> {
+            Matriz mapa = new Matriz(5, 5);
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+            // Armamos el escenario de prueba
+            mapa.colocarObjeto(new ParedSimple(new Posicion(0, 0)));
+            mapa.colocarObjeto(new ParedSimple(new Posicion(1, 0)));
+            mapa.colocarObjeto(new ParedSimple(new Posicion(4, 4)));
+            
+            Jugador jugador = new Jugador(new Posicion(2, 2));
+            mapa.colocarObjeto(jugador);
+            mapa.colocarObjeto(new CajaSimple(new Posicion(3, 2)));
+
+            // Instanciamos el controlador
+            GestorJuego gestor = new GestorJuego(mapa, jugador);
+
+            // Levantamos la vista
+            VentanaPrincipal ventana = new VentanaPrincipal(gestor, mapa);
+            gestor.setVentana(ventana); // Conectamos controlador -> vista
+            
+            ventana.setVisible(true);
+        });
     }
 }

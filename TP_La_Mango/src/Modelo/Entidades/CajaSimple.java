@@ -1,9 +1,9 @@
 package Modelo.Entidades;
 
-public class CajaSimple implements Caja, GameObject {
+import Modelo.Nucleo.Posicion;
 
-    @Override
-    public boolean esSolido() {
-        return true;
+public class CajaSimple extends GameObject {
+    public CajaSimple(Posicion posicion) {
+        super(posicion, '$'); // '$' representa la caja
     }
 }

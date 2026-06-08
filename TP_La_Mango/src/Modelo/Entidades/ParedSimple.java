@@ -1,9 +1,9 @@
 package Modelo.Entidades;
 
-public class ParedSimple implements GameObject {
+import Modelo.Nucleo.Posicion;
 
-    @Override
-    public boolean esSolido() {
-        return true;
+public class ParedSimple extends GameObject {
+    public ParedSimple (Posicion pos){
+        super(pos, '#');
     }
 }

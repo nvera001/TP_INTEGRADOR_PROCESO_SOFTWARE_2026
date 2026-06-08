@@ -1,9 +1,9 @@
 package App;
 
-import Controlador.GestorJuego;
-import Modelo.Entidades.*;
 import Modelo.Nucleo.Matriz;
 import Modelo.Nucleo.Posicion;
+import Modelo.Entidades.*;
+import Controlador.GestorJuego;
 import Vista.VentanaPrincipal;
 import javax.swing.SwingUtilities;
 
@@ -13,11 +13,14 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             Matriz mapa = new Matriz(5, 5);
 
+            
             // Armamos el escenario de prueba
             mapa.colocarObjeto(new ParedSimple(new Posicion(0, 0)));
             mapa.colocarObjeto(new ParedSimple(new Posicion(1, 0)));
             mapa.colocarObjeto(new ParedSimple(new Posicion(4, 4)));
-            
+
+            mapa.registrarMeta(new Posicion(4, 2));
+
             Jugador jugador = new Jugador(new Posicion(2, 2));
             mapa.colocarObjeto(jugador);
             mapa.colocarObjeto(new CajaSimple(new Posicion(3, 2)));

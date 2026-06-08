@@ -9,15 +9,18 @@ import Modelo.Nucleo.Posicion;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import javax.swing.JPanel;
 
 public class PanelJuego extends JPanel {
     private final Matriz matriz;
-    private final int TAMANIO_TILE = 64; // Cada casilla mide 64x64 píxeles
+    private final CargadorRecursos cargador;
+    private final int TAMANIO_TILE = 64; // El tamaño nativo de los sprites de Kenney
 
     public PanelJuego(Matriz matriz) {
         this.matriz = matriz;
-        // Definimos un tamaño fijo para nuestro mapa de 5x5 por ahora
+        this.cargador = new CargadorRecursos(); // Inicializa y carga las imágenes
+        
         this.setPreferredSize(new Dimension(5 * TAMANIO_TILE, 5 * TAMANIO_TILE));
         this.setBackground(Color.BLACK);
     }
@@ -26,22 +29,42 @@ public class PanelJuego extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Recorremos la matriz y dibujamos cada entidad
+        // Renderizado por capas (Para evitar bugs visuales)
         for (int y = 0; y < 5; y++) {
             for (int x = 0; x < 5; x++) {
-                GameObject obj = matriz.obtenerObjetoEn(new Posicion(x, y));
+                Posicion posActual = new Posicion(x, y);
+                GameObject obj = matriz.obtenerObjetoEn(posActual);
                 int px = x * TAMANIO_TILE;
                 int py = y * TAMANIO_TILE;
 
+                // Capa 1: El Piso base (Siempre se dibuja)
+                Image imgPiso = cargador.getImagen("piso");
+                if (imgPiso != null) {
+                    g.drawImage(imgPiso, px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                }
+
+                // Capa 2: Las Metas (Se dibujan arriba del piso)
+                if (matriz.esMeta(posActual)) {
+                    Image imgMeta = cargador.getImagen("meta");
+                    if (imgMeta != null) {
+                        g.drawImage(imgMeta, px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                    }
+                }
+
+                // Capa 3: Las Entidades sólidas (Se dibujan arriba de todo)
                 if (obj instanceof ParedSimple) {
-                    g.setColor(Color.GRAY);
-                    g.fillRect(px, py, TAMANIO_TILE, TAMANIO_TILE);
-                } else if (obj instanceof Jugador) {
-                    g.setColor(Color.RED);
-                    g.fillOval(px + 4, py + 4, TAMANIO_TILE - 8, TAMANIO_TILE - 8);
-                } else if (obj instanceof CajaSimple) {
-                    g.setColor(Color.ORANGE);
-                    g.fillRect(px + 8, py + 8, TAMANIO_TILE - 16, TAMANIO_TILE - 16);
+                    g.drawImage(cargador.getImagen("pared"), px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                } 
+                else if (obj instanceof Jugador) {
+                    g.drawImage(cargador.getImagen("jugador"), px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                } 
+                else if (obj instanceof CajaSimple) {
+                    if (matriz.esMeta(posActual)) {
+                        // Si la caja está en la meta, usamos el sprite especial de Kenney
+                        g.drawImage(cargador.getImagen("caja_meta"), px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                    } else {
+                        g.drawImage(cargador.getImagen("caja"), px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                    }
                 }
             }
         }

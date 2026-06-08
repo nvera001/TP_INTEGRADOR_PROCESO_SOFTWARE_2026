@@ -7,6 +7,7 @@ import Modelo.Nucleo.Direccion;
 import Modelo.Nucleo.Matriz;
 import Modelo.Nucleo.Posicion;
 import Vista.VentanaPrincipal;
+import javax.swing.JOptionPane; // Para el cartel de victoria
 
 public class GestorJuego {
     private final Matriz matriz;
@@ -49,5 +50,11 @@ public class GestorJuego {
         if (ventana != null) {
             ventana.actualizarPantalla();
         }
+
+        if (matriz.estanTodasLasMetasCubiertas()) {
+            // Mostramos un cartel emergente nativo de Swing
+            JOptionPane.showMessageDialog(ventana, "¡Ganaste el nivel! Felicitaciones.", "Victoria", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
+    
 }

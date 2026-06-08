@@ -1,6 +1,9 @@
 package Modelo.Nucleo;
 
+import Modelo.Entidades.CajaSimple;
 import Modelo.Entidades.GameObject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Matriz {
 
@@ -8,10 +11,13 @@ public class Matriz {
     private final int filas;
     private final int columnas;
 
+    private final List<Posicion> metas;
+
     public Matriz(int filas, int columnas) {
         this.filas = filas;
         this.columnas = columnas;
         this.grilla = new GameObject[filas][columnas];
+        this.metas = new ArrayList<>();
     }
 
     public void colocarObjeto(GameObject obj) {
@@ -26,19 +32,6 @@ public class Matriz {
         return grilla[pos.getY()][pos.getX()];
     }
 
-    public void mostrarPorConsola() {
-        for (int y = 0; y < filas; y++) {
-            for (int x = 0; x < columnas; x++) {
-                if (grilla[y][x] == null) {
-                    System.out.print(". "); // Espacio vacío
-                } else {
-                    System.out.print(grilla[y][x].getSimbolo() + " ");
-                }
-            }
-            System.out.println();
-        }
-    }
-
     public void moverObjeto(GameObject obj, Posicion nuevaPos) {
         Posicion viejaPos = obj.getPosicion();
 
@@ -51,4 +44,41 @@ public class Matriz {
         // Le actualizamos la posición interna al objeto
         obj.setPosicion(nuevaPos);
     }
+
+    public void registrarMeta(Posicion pos) {
+        if (!metas.contains(pos)) {
+            metas.add(pos);
+        }
+    }
+
+    public boolean esMeta(Posicion pos) {
+        return metas.contains(pos);
+    }
+
+    public boolean estanTodasLasMetasCubiertas() {
+        if (metas.isEmpty()) return false;
+        
+        for (Posicion posMeta : metas) {
+            GameObject obj = obtenerObjetoEn(posMeta);
+            // Si en la posición de la meta NO hay una caja, todavía no ganaste
+            if (!(obj instanceof CajaSimple)) {
+                return false; 
+            }
+        }
+        return true; // Todas las metas tienen una caja encima
+    }
+
+    public void mostrarPorConsola() {
+        for (int y = 0; y < filas; y++) {
+            for (int x = 0; x < columnas; x++) {
+                if (grilla[y][x] == null) {
+                    System.out.print(esMeta(new Posicion(x, y)) ? "X " : ". ");
+                } else {
+                    System.out.print(grilla[y][x].getSimbolo() + " ");
+                }
+            }
+            System.out.println();
+        }
+    }
 }
+

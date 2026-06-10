@@ -15,15 +15,17 @@ import javax.swing.JPanel;
 public class PanelJuego extends JPanel {
     private final Matriz matriz;
     private final CargadorRecursos cargador;
-    private final int TAMANIO_TILE = 64; // El tamaño nativo de los sprites de Kenney
+    private final int TAMANIO_TILE = 64;
 
     public PanelJuego(Matriz matriz) {
         this.matriz = matriz;
         this.cargador = new CargadorRecursos(); // Inicializa y carga las imágenes
 
-        int ancho = matriz.getColumnas() * TAMANIO_TILE;
-        int alto = matriz.getFilas() * TAMANIO_TILE;
-        this.setPreferredSize(new Dimension(ancho, alto));
+        int anchoPanel = matriz.getColumnas() * TAMANIO_TILE;
+        int altoPanel = matriz.getFilas() * TAMANIO_TILE;
+
+        this.setPreferredSize(new Dimension(anchoPanel, altoPanel));
+        this.setMinimumSize(new Dimension(anchoPanel, altoPanel));
         this.setBackground(Color.BLACK);
     }
 
@@ -32,8 +34,8 @@ public class PanelJuego extends JPanel {
         super.paintComponent(g);
 
         // Renderizado por capas (Para evitar bugs visuales)
-        for (int y = 0; y < 5; y++) {
-            for (int x = 0; x < 5; x++) {
+        for (int y = 0; y < matriz.getFilas(); y++) {
+            for (int x = 0; x < matriz.getColumnas(); x++) {
                 Posicion posActual = new Posicion(x, y);
                 GameObject obj = matriz.obtenerObjetoEn(posActual);
                 int px = x * TAMANIO_TILE;

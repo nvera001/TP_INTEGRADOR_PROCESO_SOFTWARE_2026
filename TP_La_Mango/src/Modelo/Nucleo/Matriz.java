@@ -22,8 +22,8 @@ public class Matriz {
         this.metas = new ArrayList<>();
     }
 
-    public int getFilas() { return filas; }
-    public int getColumnas() { return columnas; }
+    public int getFilas() { return this.filas; }
+    public int getColumnas() { return this.columnas; }
 
     public void colocarObjeto(GameObject obj) {
         if (obj instanceof Meta) {

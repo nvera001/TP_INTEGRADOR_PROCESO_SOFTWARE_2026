@@ -15,7 +15,8 @@ public class GestorJuego {
 
     private final String[] rutasNiveles = {
             "/Modelo/Mapas/mapa.txt",
-            "/Modelo/Mapas/mapa2.txt"
+            "/Modelo/Mapas/mapa2.txt",
+            "/Modelo/Mapas/mapa3.txt"
     };
     private int indiceNivelActual = 0;
     private Matriz matriz;

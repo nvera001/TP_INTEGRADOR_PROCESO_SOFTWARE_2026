@@ -3,6 +3,7 @@ package Modelo.Nucleo;
 import Modelo.Entidades.CajaSimple;
 import Modelo.Entidades.GameObject;
 import Modelo.Entidades.Jugador;
+import Modelo.Entidades.Meta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,7 @@ public class Matriz {
     private final GameObject[][] grilla;
     private final int filas;
     private final int columnas;
-
-    private final List<Posicion> metas;
+    private final List<Meta> metas;
 
     public Matriz(int filas, int columnas) {
         this.filas = filas;
@@ -22,9 +22,18 @@ public class Matriz {
         this.metas = new ArrayList<>();
     }
 
+    public int getFilas() { return filas; }
+    public int getColumnas() { return columnas; }
+
     public void colocarObjeto(GameObject obj) {
-        Posicion pos = obj.getPosicion();
-        grilla[pos.getY()][pos.getX()] = obj;
+        if (obj instanceof Meta) {
+            // Si es una Meta, se guarda en la capa de fondo
+            metas.add((Meta) obj);
+        } else {
+            // Si es un sólido (Pared, Caja, Jugador), va a la grilla normal
+            Posicion pos = obj.getPosicion();
+            grilla[pos.getY()][pos.getX()] = obj;
+        }
     }
 
     public GameObject obtenerObjetoEn(Posicion pos) {
@@ -36,68 +45,45 @@ public class Matriz {
 
     public void moverObjeto(GameObject obj, Posicion nuevaPos) {
         Posicion viejaPos = obj.getPosicion();
-
-        // Borramos de la posición vieja
         grilla[viejaPos.getY()][viejaPos.getX()] = null;
-
-        // Lo ponemos en la posición nueva
         grilla[nuevaPos.getY()][nuevaPos.getX()] = obj;
-
-        // Le actualizamos la posición interna al objeto
         obj.setPosicion(nuevaPos);
     }
 
-    public void registrarMeta(Posicion pos) {
-        if (!metas.contains(pos)) {
-            metas.add(pos);
-        }
-    }
-
     public boolean esMeta(Posicion pos) {
-        return metas.contains(pos);
+        for (Meta meta : metas) {
+            if (meta.getPosicion().equals(pos)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean estanTodasLasMetasCubiertas() {
         if (metas.isEmpty()) return false;
-        
-        for (Posicion posMeta : metas) {
-            GameObject obj = obtenerObjetoEn(posMeta);
-            // Si en la posición de la meta NO hay una caja, todavía no ganaste
-            if (!(obj instanceof CajaSimple)) {
-                return false; 
+
+        for (Meta meta : metas) {
+            // Buscamos qué objeto hay en la grilla exactamente en la posición de esta meta
+            GameObject objEnFrente = obtenerObjetoEn(meta.getPosicion());
+
+            // Si en esa posición NO hay una caja, significa que todavía no ganaste
+            if (!(objEnFrente instanceof CajaSimple)) {
+                return false;
             }
         }
-        return true; // Todas las metas tienen una caja encima
+        return true; // Si recorrió todas las metas y en todas había una caja, ¡GANASTE!
     }
 
-    public void mostrarPorConsola() {
-        for (int y = 0; y < filas; y++) {
-            for (int x = 0; x < columnas; x++) {
-                if (grilla[y][x] == null) {
-                    System.out.print(esMeta(new Posicion(x, y)) ? "X " : ". ");
-                } else {
-                    System.out.print(grilla[y][x].getSimbolo() + " ");
-                }
-            }
-            System.out.println();
-        }
-    }
-
-    // Agrega este método dentro de tu clase Matriz
     public Jugador obtenerJugador() {
         for (int y = 0; y < filas; y++) {
             for (int x = 0; x < columnas; x++) {
                 GameObject obj = grilla[y][x];
-
-                // Si encontramos un objeto que sea de la clase Jugador, lo devolvemos
                 if (obj instanceof Jugador) {
                     return (Jugador) obj;
                 }
             }
         }
-        // Retorna null si por algún motivo el mapa cargado no tenía un jugador
         System.out.println("ADVERTENCIA: No se encontró ningún jugador en el mapa.");
         return null;
     }
 }
-

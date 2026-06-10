@@ -20,8 +20,10 @@ public class PanelJuego extends JPanel {
     public PanelJuego(Matriz matriz) {
         this.matriz = matriz;
         this.cargador = new CargadorRecursos(); // Inicializa y carga las imágenes
-        
-        this.setPreferredSize(new Dimension(5 * TAMANIO_TILE, 5 * TAMANIO_TILE));
+
+        int ancho = matriz.getColumnas() * TAMANIO_TILE;
+        int alto = matriz.getFilas() * TAMANIO_TILE;
+        this.setPreferredSize(new Dimension(ancho, alto));
         this.setBackground(Color.BLACK);
     }
 

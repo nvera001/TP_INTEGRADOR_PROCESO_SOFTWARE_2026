@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/TP Proceso Desarrollo.iml" filepath="$PROJECT_DIR$/.idea/TP Proceso Desarrollo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TP_La_Mango/TP_La_Mango.iml" filepath="$PROJECT_DIR$/TP_La_Mango/TP_La_Mango.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/TP SOKOVAN - PDS.iml" filepath="$PROJECT_DIR$/.idea/TP SOKOVAN - PDS.iml" />
     </modules>
   </component>
 </project>

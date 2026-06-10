@@ -3,6 +3,7 @@ package Modelo.Archivos;
 import Modelo.Entidades.GameObject;
 import Modelo.Entidades.Jugador;
 import Modelo.Fabricas.CreadorCajaSimple;
+import Modelo.Fabricas.CreadorMeta;
 import Modelo.Fabricas.CreadorGameObject;
 import Modelo.Fabricas.CreadorJugador;
 import Modelo.Fabricas.CreadorParedSimple;
@@ -20,10 +21,13 @@ public class TraductorTXT {
         CreadorCajaSimple ccs = new CreadorCajaSimple();
         CreadorParedSimple cps = new CreadorParedSimple();
         CreadorJugador cjugador = new CreadorJugador();
+        CreadorMeta cmeta = new CreadorMeta();
 
         diccionarioCadenas.put('#', cps);
         diccionarioCadenas.put('C', ccs);
         diccionarioCadenas.put('P', cjugador);
+        diccionarioCadenas.put('X', cmeta);
+
     }
 
     // Método refactorizado para devolver el GameObject o null si es espacio vacío

@@ -15,7 +15,7 @@ public class Main {
 
             // 1. Instanciar el lector y cargar el mapa (agregadas las comillas)
             LectorTXT lector = new LectorTXT();
-            lector.cargarArchivo("TP_La_Mango/src/Modelo/Mapas/mapa.txt");
+            lector.cargarArchivo("/Modelo/Mapas/mapa.txt");
             String datosDelMapa = lector.getCadena();
 
             // 2. Generar el nivel y guardar la Matriz resultante

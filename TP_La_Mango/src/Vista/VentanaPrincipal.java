@@ -77,11 +77,7 @@ public class VentanaPrincipal extends JFrame {
 
         // 3. Centralizador del mapa de Kenney
         PanelJuego panelJuego = new PanelJuego(matriz);
-        JPanel centradorMapa = new JPanel(new GridBagLayout());
-        centradorMapa.setBackground(Color.BLACK);
-        centradorMapa.add(panelJuego);
-
-        panelContenedorJuego.add(centradorMapa, BorderLayout.CENTER);
+        panelContenedorJuego.add(panelJuego, BorderLayout.CENTER);
 
         // 4. Cambiamos la interfaz de la ventana
         setContentPane(panelContenedorJuego);
@@ -89,7 +85,7 @@ public class VentanaPrincipal extends JFrame {
 
         revalidate();
         repaint();
-        requestFocusInWindow(); // Volvemos a capturar el teclado
+        requestFocusInWindow();
     }
 
     public void actualizarPantalla() {

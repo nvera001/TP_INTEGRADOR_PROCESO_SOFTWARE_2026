@@ -21,53 +21,63 @@ public class PanelJuego extends JPanel {
         this.matriz = matriz;
         this.cargador = new CargadorRecursos(); // Inicializa y carga las imágenes
 
-        int anchoPanel = matriz.getColumnas() * TAMANIO_TILE;
-        int altoPanel = matriz.getFilas() * TAMANIO_TILE;
-
-        this.setPreferredSize(new Dimension(anchoPanel, altoPanel));
-        this.setMinimumSize(new Dimension(anchoPanel, altoPanel));
         this.setBackground(Color.BLACK);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        int columnas = matriz.getColumnas();
+        int filas = matriz.getFilas();
+        if (columnas == 0 || filas == 0) return;
 
-        // Renderizado por capas (Para evitar bugs visuales)
-        for (int y = 0; y < matriz.getFilas(); y++) {
-            for (int x = 0; x < matriz.getColumnas(); x++) {
+        int tileAnchoMax = getWidth() / columnas;
+        int tileAltoMax = getHeight() / filas;
+
+        int tileSize = Math.min(tileAnchoMax, tileAltoMax);
+
+        tileSize = Math.min(tileSize, TAMANIO_TILE);
+
+        int mapaAnchoPixeles = columnas * tileSize;
+        int mapaAltoPixeles = filas * tileSize;
+
+        int offsetX = (getWidth() - mapaAnchoPixeles) / 2;
+        int offsetY = (getHeight() - mapaAltoPixeles) / 2;
+
+        for (int y = 0; y < filas; y++) {
+            for (int x = 0; x < columnas; x++) {
                 Posicion posActual = new Posicion(x, y);
                 GameObject obj = matriz.obtenerObjetoEn(posActual);
-                int px = x * TAMANIO_TILE;
-                int py = y * TAMANIO_TILE;
+                int px = offsetX + (x * tileSize);
+                int py = offsetY + (y * tileSize);
 
                 // Capa 1: El Piso base (Siempre se dibuja)
                 Image imgPiso = cargador.getImagen("piso");
                 if (imgPiso != null) {
-                    g.drawImage(imgPiso, px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                    g.drawImage(imgPiso, px, py, tileSize, tileSize, null);
                 }
 
                 // Capa 2: Las Metas (Se dibujan arriba del piso)
                 if (matriz.esMeta(posActual)) {
                     Image imgMeta = cargador.getImagen("meta");
                     if (imgMeta != null) {
-                        g.drawImage(imgMeta, px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                        g.drawImage(imgMeta, px, py, tileSize, tileSize, null);
                     }
                 }
 
                 // Capa 3: Las Entidades sólidas (Se dibujan arriba de todo)
                 if (obj instanceof ParedSimple) {
-                    g.drawImage(cargador.getImagen("pared"), px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                    g.drawImage(cargador.getImagen("pared"), px, py, tileSize, tileSize, null);
                 } 
                 else if (obj instanceof Jugador) {
-                    g.drawImage(cargador.getImagen("jugador"), px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                    g.drawImage(cargador.getImagen("jugador"), px, py, tileSize, tileSize, null);
                 } 
                 else if (obj instanceof CajaSimple) {
                     if (matriz.esMeta(posActual)) {
                         // Si la caja está en la meta, usamos el sprite especial de Kenney
-                        g.drawImage(cargador.getImagen("caja_meta"), px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                        g.drawImage(cargador.getImagen("caja_meta"), px, py, tileSize, tileSize, null);
                     } else {
-                        g.drawImage(cargador.getImagen("caja"), px, py, TAMANIO_TILE, TAMANIO_TILE, null);
+                        g.drawImage(cargador.getImagen("caja"), px, py, tileSize, tileSize, null);
                     }
                 }
             }

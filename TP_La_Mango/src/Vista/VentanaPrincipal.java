@@ -14,19 +14,22 @@ public class VentanaPrincipal extends JFrame {
 
     public VentanaPrincipal(GestorJuego gestor) {
         this.gestor = gestor;
-
-        setTitle("Sokoban - TP La Mango");
+        setTitle("Sokoban ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        setUndecorated(true);
+
+        Dimension tamanioPantalla = Toolkit.getDefaultToolkit().getScreenSize();
+
+        setBounds(0, 0, tamanioPantalla.width, tamanioPantalla.height);
+
         setMinimumSize(new Dimension(800, 600));
 
         mostrarMenuPrincipal();
 
         // Capturador de teclado
         addKeyListener(new KeyAdapter() {
-            @Override
             public void keyPressed(KeyEvent e) {
-
                 if (!juegoIniciado) return;
 
                 switch (e.getKeyCode()) {

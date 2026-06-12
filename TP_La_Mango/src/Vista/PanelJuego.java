@@ -26,7 +26,19 @@ public class PanelJuego extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        Image imgFondo = cargador.getImagen("fondo");
+        if (imgFondo != null) {
+            int tileFondoSize = imgFondo.getWidth(null);
+            for (int fx = 0; fx < getWidth(); fx += tileFondoSize) {
+                for (int fy = 0; fy < getHeight(); fy += tileFondoSize) {
+                    g.drawImage(imgFondo, fx, fy, this);
+                }
+            }
+        } else {
+            // Por las dudas, si no carga la imagen, que quede negro de respaldo
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
         int columnas = matriz.getColumnas();
         int filas = matriz.getFilas();
         if (columnas == 0 || filas == 0) return;

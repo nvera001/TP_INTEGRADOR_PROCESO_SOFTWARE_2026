@@ -9,7 +9,8 @@ import Modelo.Entidades.GameObject;
 import Modelo.Entidades.Jugador;
 import Modelo.Entidades.CajaSimple;
 import Vista.VentanaPrincipal;
-import javax.swing.JOptionPane; // Para el cartel de victoria
+import Vista.GestorAudio;
+import Vista.DialogoVictoria;
 
 public class GestorJuego {
 
@@ -26,9 +27,17 @@ public class GestorJuego {
     private final LectorTXT lector;
     private final GeneradorNivel generador;
 
+    private int movimientosNivel = 0;
+    private int empujesNivel = 0;
+    private final GestorAudio audio;
+
+    private int segundosTranscurridos = 0;
+    private javax.swing.Timer timerReloj;
+
     public GestorJuego() {
         this.lector = new LectorTXT();
         this.generador = new GeneradorNivel();
+        this.audio = new GestorAudio(); // Inicializamos el audio
     }
 
     public void setVentana(VentanaPrincipal ventana) {
@@ -55,20 +64,36 @@ public class GestorJuego {
 
     private void cargarNivel(int indice) {
         if (indice >= rutasNiveles.length) {
-            JOptionPane.showMessageDialog(ventana, "¡FELICITACIONES! Completaste todos los niveles de TP La Mango.", "¡Victoria Total!", JOptionPane.INFORMATION_MESSAGE);
             volverAlMenu();
             return;
         }
 
-        // Leemos el archivo usando el Classpath portable
+        // Reseteamos estadísticas físicas
+        this.movimientosNivel = 0;
+        this.empujesNivel = 0;
+
+        // REINICIAR EL RELOJ DESDE CERO
+        this.segundosTranscurridos = 0;
+        if (timerReloj != null) {
+            timerReloj.stop(); // Frena el timer del nivel anterior si existía
+        }
+
+        // Creamos el cronómetro: cada 1000ms suma un segundo y actualiza el HUD en pantalla
+        timerReloj = new javax.swing.Timer(1000, e -> {
+            segundosTranscurridos++;
+            if (ventana != null) {
+                ventana.actualizarHUD(); // Le avisa a la barra superior que cambie el tiempo
+            }
+        });
+        timerReloj.start(); // Arranca el tiempo
+
+        // Leemos el archivo y cargamos la matriz (Esto queda igual)
         lector.cargarArchivo(rutasNiveles[indice]);
         String datos = lector.getCadena();
-
         this.matriz = generador.generarMatrizDesdeString(datos);
         this.jugador = matriz.obtenerJugador();
 
         if (this.jugador == null) {
-            JOptionPane.showMessageDialog(ventana, "Error crítico: El mapa no tiene jugador de salida.", "Error", JOptionPane.ERROR_MESSAGE);
             volverAlMenu();
             return;
         }
@@ -85,34 +110,73 @@ public class GestorJuego {
         Posicion proxPosJugador = posJugador.sumar(dir.getDeltaX(), dir.getDeltaY());
         GameObject destino = matriz.obtenerObjetoEn(proxPosJugador);
 
-        // Caso 1: Espacio vacío
+        boolean seMovio = false;
+
         if (destino == null) {
             matriz.moverObjeto(jugador, proxPosJugador);
-        } 
-        // Caso 2: Hay una caja
+            movimientosNivel++; // Suma al HUD en vivo
+            seMovio = true;
+            audio.reproducirSonido("paso.wav");
+        }
+
         else if (destino instanceof CajaSimple) {
             Posicion proxPosCaja = proxPosJugador.sumar(dir.getDeltaX(), dir.getDeltaY());
             GameObject destinoDeCaja = matriz.obtenerObjetoEn(proxPosCaja);
 
-            // Si detrás de la caja está vacío, empujamos
             if (destinoDeCaja == null) {
                 matriz.moverObjeto(destino, proxPosCaja);    // Mueve la caja
                 matriz.moverObjeto(jugador, proxPosJugador); // Mueve al jugador
+                movimientosNivel++; // Suma movimiento al HUD
+                empujesNivel++;     // Suma empuje al HUD
+                seMovio = true;
+                audio.reproducirSonido("empuje.wav");
             }
         }
-        // Caso 3: Pared (destino instanceof ParedSimple) -> No hace nada
 
-        // Si la ventana ya existe, le avisamos que el modelo cambió para que redibuje
-        if (ventana != null) {
+        if (ventana != null && seMovio) {
             ventana.actualizarPantalla();
+            ventana.actualizarHUD();
         }
 
         if (matriz.estanTodasLasMetasCubiertas()) {
-            // Mostramos un cartel emergente nativo de Swing
-            JOptionPane.showMessageDialog(ventana, "¡Ganaste el nivel! Felicitaciones.", "Victoria", JOptionPane.INFORMATION_MESSAGE);
-            indiceNivelActual++;
-            cargarNivel(indiceNivelActual);
+            if (timerReloj != null) {
+                timerReloj.stop();
+            }
+            audio.reproducirSonido("victoria.wav");
+
+            DialogoVictoria cartelVictoria = new DialogoVictoria(
+                    ventana,
+                    getNivelActual(),
+                    movimientosNivel,
+                    empujesNivel,
+                    getTiempoFormateado(),
+                    () -> {
+                        indiceNivelActual++;
+                        cargarNivel(indiceNivelActual);
+                    }
+            );
+            cartelVictoria.setVisible(true);
         }
     }
-    
+
+    // 4. AGREGÁ ESTOS MÉTODOS ABAJO DE TODO (Para que la ventana pueda chusmear los datos en vivo)
+    public int getNivelActual() {
+        return indiceNivelActual + 1;
+    }
+
+    public int getMovimientos() {
+        return movimientosNivel;
+    }
+
+    public int getEmpujes() {
+        return empujesNivel;
+    }
+
+    public String getTiempoFormateado() {
+        int horas = segundosTranscurridos / 3600;
+        int minutos = (segundosTranscurridos % 3600) / 60;
+        int segundos = segundosTranscurridos % 60;
+        // Devuelve exactamente el formato de tu foto: H:MM:SS
+        return String.format("%d:%02d:%02d", horas, minutos, segundos);
+    }
 }

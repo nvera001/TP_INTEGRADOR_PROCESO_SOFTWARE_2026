@@ -8,9 +8,11 @@ import Controlador.GestorJuego;
 import Modelo.Nucleo.Direccion;
 import Modelo.Nucleo.Matriz;
 
+
 public class VentanaPrincipal extends JFrame {
     private final GestorJuego gestor;
     private boolean juegoIniciado = false;
+    private JLabel txtHUD;
 
     public VentanaPrincipal(GestorJuego gestor) {
         this.gestor = gestor;
@@ -54,35 +56,40 @@ public class VentanaPrincipal extends JFrame {
     }
 
     public void mostrarPantallaJuego(Matriz matriz) {
-        // 1. Contenedor principal del juego (BorderLayout)
+        getContentPane().removeAll();
+
         JPanel panelContenedorJuego = new JPanel(new BorderLayout());
         panelContenedorJuego.setBackground(Color.BLACK);
 
-        // 2. Creamos el HUD superior (Barra de herramientas)
-        JPanel hudSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        JPanel hudSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER, 35, 12));
         hudSuperior.setBackground(new Color(40, 40, 40));
 
+        txtHUD = new JLabel();
+        txtHUD.setFont(new Font("Monospaced", Font.BOLD, 20));
+        txtHUD.setForeground(Color.WHITE);
+
+        hudSuperior.add(txtHUD);
+        actualizarHUD();
+
         JButton btnReiniciar = new JButton("REINICIAR [R]");
-        btnReiniciar.setBackground(new Color(230, 126, 34)); // Naranja
+        btnReiniciar.setBackground(new Color(230, 126, 34));
         btnReiniciar.setForeground(Color.WHITE);
-        btnReiniciar.setFocusable(false); // CRÍTICO: evita que el botón le robe el foco al teclado
+        btnReiniciar.setFocusable(false);
         btnReiniciar.addActionListener(e -> gestor.reiniciarNivel());
+        hudSuperior.add(btnReiniciar);
 
         JButton btnMenu = new JButton("MENÚ PRINCIPAL [M]");
-        btnMenu.setBackground(new Color(149, 165, 166)); // Gris
+        btnMenu.setBackground(new Color(149, 165, 166));
         btnMenu.setForeground(Color.WHITE);
         btnMenu.setFocusable(false);
         btnMenu.addActionListener(e -> gestor.volverAlMenu());
-
-        hudSuperior.add(btnReiniciar);
         hudSuperior.add(btnMenu);
+
         panelContenedorJuego.add(hudSuperior, BorderLayout.NORTH);
 
-        // 3. Centralizador del mapa de Kenney
         PanelJuego panelJuego = new PanelJuego(matriz);
         panelContenedorJuego.add(panelJuego, BorderLayout.CENTER);
 
-        // 4. Cambiamos la interfaz de la ventana
         setContentPane(panelContenedorJuego);
         juegoIniciado = true;
 
@@ -93,5 +100,18 @@ public class VentanaPrincipal extends JFrame {
 
     public void actualizarPantalla() {
         repaint();
+    }
+
+    public void actualizarHUD() {
+        if (txtHUD == null || gestor == null) return;
+
+        // Formateamos con ceros a la izquierda igual que en tu foto
+        String nivel = String.format("%02d", gestor.getNivelActual());
+        String moves = String.format("%04d", gestor.getMovimientos());
+        String pushes = String.format("%04d", gestor.getEmpujes());
+        String time = gestor.getTiempoFormateado();
+
+        // Clavamos la estética exacta en la pantalla principal
+        txtHUD.setText(nivel + " | moves: " + moves + "   pushes: " + pushes + "   time: " + time);
     }
 }

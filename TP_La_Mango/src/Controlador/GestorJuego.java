@@ -1,13 +1,13 @@
 package Controlador;
 
 import Modelo.Archivos.LectorTXT;
+import Modelo.Entidades.Caja;
 import Modelo.Fabricas.GeneradorNivel;
 import Modelo.Nucleo.Matriz;
 import Modelo.Nucleo.Posicion;
 import Modelo.Nucleo.Direccion;
 import Modelo.Entidades.GameObject;
 import Modelo.Entidades.Jugador;
-import Modelo.Entidades.CajaSimple;
 import Vista.VentanaPrincipal;
 import Vista.GestorAudio;
 import Vista.DialogoVictoria;
@@ -119,15 +119,13 @@ public class GestorJuego {
             audio.reproducirSonido("paso.wav");
         }
 
-        else if (destino instanceof CajaSimple) {
-            Posicion proxPosCaja = proxPosJugador.sumar(dir.getDeltaX(), dir.getDeltaY());
-            GameObject destinoDeCaja = matriz.obtenerObjetoEn(proxPosCaja);
+        else if (destino instanceof Caja) {
+            Caja caja = (Caja) destino;
 
-            if (destinoDeCaja == null) {
-                matriz.moverObjeto(destino, proxPosCaja);    // Mueve la caja
+            if (caja.serEmpujada(dir, matriz, destino)) {
                 matriz.moverObjeto(jugador, proxPosJugador); // Mueve al jugador
-                movimientosNivel++; // Suma movimiento al HUD
-                empujesNivel++;     // Suma empuje al HUD
+                movimientosNivel++;
+                empujesNivel++;
                 seMovio = true;
                 audio.reproducirSonido("empuje.wav");
             }

@@ -1,6 +1,6 @@
 package Modelo.Nucleo;
 
-import Modelo.Entidades.CajaSimple;
+import Modelo.Entidades.Caja;
 import Modelo.Entidades.GameObject;
 import Modelo.Entidades.Jugador;
 import Modelo.Entidades.Meta;
@@ -67,7 +67,7 @@ public class Matriz {
             GameObject objEnFrente = obtenerObjetoEn(meta.getPosicion());
 
             // Si en esa posición NO hay una caja, significa que todavía no ganaste
-            if (!(objEnFrente instanceof CajaSimple)) {
+            if (!(objEnFrente instanceof Caja)) {
                 return false;
             }
         }
@@ -86,4 +86,19 @@ public class Matriz {
         System.out.println("ADVERTENCIA: No se encontró ningún jugador en el mapa.");
         return null;
     }
+
+    public void eliminarObjeto(Posicion pos) {
+        if (pos.getX() >= 0 && pos.getX() < columnas && pos.getY() >= 0 && pos.getY() < filas) {
+            grilla[pos.getY()][pos.getX()] = null;
+        }
+    }
+
+    public boolean esCasilleroCerrojo(Posicion pos) {
+        return false; // Se completará al implementar los terrenos especiales
+    }
+
+    public void abrirMurosCorrespondientes() {
+        System.out.println("¡Muros abiertos por la Caja Llave!");
+    }
+
 }

@@ -19,14 +19,17 @@ public class CargadorRecursos {
         try {
             // Usamos rutas absolutas dentro del Classpath. 
             // Ojo con las mayúsculas: /Vista/recursos/
-            imagenes.put("piso", leerImagen("/Vista/recursos/piso.png"));
-            imagenes.put("jugador", leerImagen("/Vista/recursos/jugador.png"));
-            imagenes.put("pared", leerImagen("/Vista/recursos/pared.png"));
-            imagenes.put("caja", leerImagen("/Vista/recursos/caja.png"));
-            imagenes.put("caja_meta", leerImagen("/Vista/recursos/caja_meta.png"));
-            imagenes.put("meta", leerImagen("/Vista/recursos/meta.png"));
-            imagenes.put("fondo", leerImagen("/Vista/recursos/fondo.jpg"));
-            
+            imagenes.put("piso", leerImagen("/Vista/recursos/imagenes/piso.png"));
+            imagenes.put("jugador", leerImagen("/Vista/recursos/imagenes/jugador.png"));
+            imagenes.put("pared", leerImagen("/Vista/recursos/imagenes/pared.png"));
+            imagenes.put("caja", leerImagen("/Vista/recursos/imagenes/caja.png"));
+            imagenes.put("caja_meta", leerImagen("/Vista/recursos/imagenes/caja_meta.png"));
+            imagenes.put("meta", leerImagen("/Vista/recursos/imagenes/meta.png"));
+            imagenes.put("fondo", leerImagen("/Vista/recursos/imagenes/fondo.jpg"));
+
+            imagenes.put("caja_fragil", leerImagen("/Vista/recursos/imagenes/caja_fragil.png"));
+            imagenes.put("caja_llave", leerImagen("/Vista/recursos/imagenes/caja_llave.png"));
+
             System.out.println("¡Todas las imágenes se cargaron con éxito desde el Classpath!");
         } catch (IOException e) {
             System.err.println("Error crítico: No se pudo cargar algún asset del Sokoban.");

@@ -5,9 +5,9 @@ import Modelo.Entidades.GameObject;
 import Modelo.Entidades.Jugador;
 import Modelo.Entidades.ParedSimple;
 import Modelo.Nucleo.Matriz;
+import Modelo.Entidades.Caja;
 import Modelo.Nucleo.Posicion;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.JPanel;
@@ -83,13 +83,24 @@ public class PanelJuego extends JPanel {
                 } 
                 else if (obj instanceof Jugador) {
                     g.drawImage(cargador.getImagen("jugador"), px, py, tileSize, tileSize, null);
-                } 
-                else if (obj instanceof CajaSimple) {
-                    if (matriz.esMeta(posActual)) {
-                        // Si la caja está en la meta, usamos el sprite especial de Kenney
-                        g.drawImage(cargador.getImagen("caja_meta"), px, py, tileSize, tileSize, null);
-                    } else {
-                        g.drawImage(cargador.getImagen("caja"), px, py, tileSize, tileSize, null);
+                }
+                else if (obj instanceof Caja) {
+                    char simbolo = obj.getSimbolo();
+
+                    switch (simbolo) {
+                        case 'F' ->
+                                g.drawImage(cargador.getImagen("caja_fragil"), px, py, tileSize, tileSize, null);
+
+                        case 'K' ->
+                                g.drawImage(cargador.getImagen("caja_llave"), px, py, tileSize, tileSize, null);
+
+                        default -> {
+                            if (matriz.esMeta(posActual)) {
+                                g.drawImage(cargador.getImagen("caja_meta"), px, py, tileSize, tileSize, null);
+                            } else {
+                                g.drawImage(cargador.getImagen("caja"), px, py, tileSize, tileSize, null);
+                            }
+                        }
                     }
                 }
             }

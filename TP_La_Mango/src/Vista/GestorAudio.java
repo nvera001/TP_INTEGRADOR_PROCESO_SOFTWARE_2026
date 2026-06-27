@@ -1,26 +1,36 @@
 package Vista;
 
 import javax.sound.sampled.*;
-import java.io.IOException;
 import java.net.URL;
 
 public class GestorAudio {
-    public void reproducirSonido(String nombreArchivo) {
-        new Thread(() -> {
-            try {
-                URL url = Thread.currentThread().getContextClassLoader().getResource("Vista/recursos/audios/" + nombreArchivo);                if (url == null) {
-                    System.err.println("No se encontró el sonido: " + nombreArchivo);
-                    return;
-                }
+    // Variable global que recuerda si el usuario sacó el volumen
+    private static boolean sonidoActivo = true;
 
-                AudioInputStream audioStream = AudioSystem.getAudioInputStream(url);
+    public static void toggleSonido() {
+        sonidoActivo = !sonidoActivo; // Invierte el estado (ON -> OFF / OFF -> ON)
+    }
+
+    public static boolean isSonidoActivo() {
+        return sonidoActivo;
+    }
+
+    public void reproducirSonido(String nombreArchivo) {
+        if (!sonidoActivo) return; // Si está desactivado, el método se corta acá y no suena nada
+
+        try {
+            URL urlStream = getClass().getResource("/Vista/recursos/audios/" + nombreArchivo);
+
+            if (urlStream != null) {
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(urlStream);
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioStream);
                 clip.start();
-
-            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-                System.err.println("Error al reproducir audio: " + e.getMessage());
+            } else {
+                System.out.println("No se encontró el archivo de audio en: /Vista/recursos/audios/" + nombreArchivo);
             }
-        }).start();
+        } catch (Exception e) {
+            System.out.println("Error al reproducir sonido: " + e.getMessage());
+        }
     }
 }

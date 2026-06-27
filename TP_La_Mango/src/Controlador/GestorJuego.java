@@ -144,22 +144,31 @@ public class GestorJuego {
             }
             audio.reproducirSonido("victoria.wav");
 
+            // Corregido: Usamos una clase anónima para pasar las dos acciones obligatorias
             DialogoVictoria cartelVictoria = new DialogoVictoria(
                     ventana,
                     getNivelActual(),
                     movimientosNivel,
                     empujesNivel,
                     getTiempoFormateado(),
-                    () -> {
-                        indiceNivelActual++;
-                        cargarNivel(indiceNivelActual);
+                    new DialogoVictoria.AccionVictoria() {
+                        @Override
+                        public void avanzarSiguienteNivel() {
+                            indiceNivelActual++;
+                            cargarNivel(indiceNivelActual);
+                        }
+
+                        @Override
+                        public void volverAlMenu() {
+                            GestorJuego.this.volverAlMenu(); // Te regresa al menú principal
+                        }
                     }
             );
             cartelVictoria.setVisible(true);
         }
     }
 
-    // 4. AGREGÁ ESTOS MÉTODOS ABAJO DE TODO (Para que la ventana pueda chusmear los datos en vivo)
+    // Métodos para que la ventana pueda chusmear los datos en vivo
     public int getNivelActual() {
         return indiceNivelActual + 1;
     }
@@ -176,7 +185,6 @@ public class GestorJuego {
         int horas = segundosTranscurridos / 3600;
         int minutos = (segundosTranscurridos % 3600) / 60;
         int segundos = segundosTranscurridos % 60;
-        // Devuelve exactamente el formato de tu foto: H:MM:SS
         return String.format("%d:%02d:%02d", horas, minutos, segundos);
     }
 }

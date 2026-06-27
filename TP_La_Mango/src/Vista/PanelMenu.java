@@ -2,6 +2,7 @@ package Vista;
 
 import javax.swing.*;
 import java.awt.*;
+import Vista.GestorAudio.*;
 
 public class PanelMenu extends JPanel {
     public interface AccionMenu {
@@ -51,79 +52,101 @@ public class PanelMenu extends JPanel {
         btnSalir.addActionListener(e -> System.exit(0));
         gbc.gridy = 4;
         add(btnSalir, gbc);
+
+        // 6. Botón de Volumen (Gris Azulado) - Agregado correctamente al panel
+        JButton btnVolumen = new JButton(GestorAudio.isSonidoActivo() ? "🔊 SONIDO: ON" : "🔇 SONIDO: OFF");
+        btnVolumen.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnVolumen.setForeground(Color.WHITE);
+        btnVolumen.setBackground(GestorAudio.isSonidoActivo() ? new Color(52, 73, 94) : new Color(127, 140, 141));
+        btnVolumen.setFocusPainted(false);
+        btnVolumen.setBorder(BorderFactory.createEmptyBorder(12, 40, 12, 40));
+        btnVolumen.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnVolumen.addActionListener(e -> {
+            GestorAudio.toggleSonido();
+            if (GestorAudio.isSonidoActivo()) {
+                btnVolumen.setText("SONIDO: ON");
+                btnVolumen.setBackground(new Color(52, 73, 94));
+            } else {
+                btnVolumen.setText("SONIDO: OFF");
+                btnVolumen.setBackground(new Color(127, 140, 141));
+            }
+        });
+        gbc.gridy = 5;
+        add(btnVolumen, gbc);
     }
 
-    // Método auxiliar para estilizar los botones y que no tengan el look viejo de Windows
     private JButton crearBoton(String texto, Font fuente, Color colorFondo) {
         JButton boton = new JButton(texto);
         boton.setFont(fuente);
         boton.setForeground(Color.WHITE);
         boton.setBackground(colorFondo);
         boton.setFocusPainted(false);
-        boton.setBorder(BorderFactory.createEmptyBorder(12, 40, 12, 40)); // Padding
-        boton.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Cursor de manito
+        boton.setBorder(BorderFactory.createEmptyBorder(12, 40, 12, 40));
+        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         boton.setContentAreaFilled(true);
         boton.setOpaque(true);
         return boton;
     }
 
     private void mostrarReglas() {
-        // 1. Creamos un diálogo flotante (modal) acoplado a la ventana principal
         Window ventanaPadre = SwingUtilities.getWindowAncestor(this);
         JDialog dialogoReglas = new JDialog(ventanaPadre, "Reglas", Dialog.ModalityType.APPLICATION_MODAL);
-        dialogoReglas.setUndecorated(true); // Le quitamos los bordes feos de Windows
-        dialogoReglas.setSize(550, 450);
-        dialogoReglas.setLocationRelativeTo(ventanaPadre); // Lo centramos perfecto
+        dialogoReglas.setUndecorated(true);
+        dialogoReglas.setSize(560, 460);
+        dialogoReglas.setLocationRelativeTo(ventanaPadre);
 
-        // 2. Panel principal del cartel (Fondo negro traslúcido elegante)
-        JPanel panelContenedor = new JPanel(new BorderLayout(20, 20));
-        panelContenedor.setBackground(new Color(20, 20, 20, 240)); // Un gris casi negro con opacidad
-        panelContenedor.setBorder(BorderFactory.createLineBorder(new Color(243, 156, 18), 3)); // Borde naranja gaming
+        JPanel panelContenedor = new JPanel(new BorderLayout(15, 15));
+        panelContenedor.setBackground(new Color(25, 25, 25));
+        panelContenedor.setBorder(BorderFactory.createLineBorder(new Color(243, 156, 18), 3));
 
-        // 3. TÍTULO DEL CARTEL
         JLabel txtTitulo = new JLabel("CÓMO JUGAR SOKOBAN", SwingConstants.CENTER);
         txtTitulo.setFont(new Font("Impact", Font.PLAIN, 32));
         txtTitulo.setForeground(new Color(243, 156, 18));
-        txtTitulo.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+        txtTitulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 10, 10));
         panelContenedor.add(txtTitulo, BorderLayout.NORTH);
 
-        // 4. CUERPO DE TEXTO (Usamos HTML para que quede espaciado e impecable)
-        String htmlReglas = "<html><body style='text-align: center; color: white; font-family: \"Segoe UI\"; font-size: 13px;'>"
-                + "<p style='margin-bottom: 15px;'>El objetivo es simple pero desafiante: tenés que empujar todas las <b>cajas</b> hasta los <b>destinos azules</b>.</p>"
-                + "<div style='text-align: left; padding-left: 40px; line-height: 1.6;'>"
-                + "🔹 <b>Empujar, no tirar:</b> Solo podés mover las cajas hacia adelante.<br>"
-                + "🔹 <b>Fuerza limitada:</b> No podés empujar más de una caja a la vez.<br>"
-                + "⚠️ <b>Zonas trampa:</b> Si pegás una caja en una esquina, quedará bloqueada.<br>"
-                + "⌨️ <b>Controles:</b> Usá las flechas del teclado para moverte.<br>"
-                + "🔄 <b>¿Te trabaste?:</b> Presioná la tecla <b>[R]</b> para reiniciar el nivel."
-                + "</div>"
-                + "</body></html>";
+        String htmlReglas = "<html>"
+                + "<body style='color: white; font-family: \"Segoe UI\", sans-serif; font-size: 13px;'>"
+                + "  <p style='text-align: center; color: #BDC3C7; margin-bottom: 20px; padding: 0 25px;'>"
+                + "     El objetivo es simple pero desafiante: tenés que empujar todas las <b>cajas</b> hasta los <b>destinos azules</b>."
+                + "  </p>"
+                + "  <div style='padding-left: 45px; padding-right: 45px;'>"
+                + "     <font color='#F1C40F'><b>• Empujar:</b></font> Solo podés mover las cajas hacia adelante.<br><br>"
+                + "     <font color='#F1C40F'><b>• Fuerza limitada:</b></font> No podés empujar más de una caja a la vez.<br><br>"
+                + "     <font color='#F1C40F'><b>• Zonas trampa:</b></font> Si pegás una caja en una esquina, quedará bloqueada.<br><br>"
+                + "     <font color='#F1C40F'><b>• Controles:</b></font> Usá las flechas del teclado para moverte.<br><br>"
+                + "     <font color='#F1C40F'><b>• ¿Te trabaste?:</b></font> Presioná la tecla <b>[R]</b> para reiniciar el nivel."
+                + "  </div>"
+                + "</body>"
+                + "</html>";
 
-        JLabel txtCuerpo = new JLabel(htmlReglas, SwingConstants.CENTER);
-        txtCuerpo.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
+        JLabel txtCuerpo = new JLabel(htmlReglas);
+        txtCuerpo.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panelContenedor.add(txtCuerpo, BorderLayout.CENTER);
 
-        // 5. BOTÓN DE CIERRE (Mismo estilo que tus botones del menú)
         JButton btnEntendido = new JButton("ENTENDIDO, ¡A JUGAR!");
         btnEntendido.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnEntendido.setForeground(Color.WHITE);
-        btnEntendido.setBackground(new Color(46, 204, 113)); // Verde pro
+        btnEntendido.setBackground(new Color(46, 204, 113));
         btnEntendido.setFocusPainted(false);
         btnEntendido.setBorder(BorderFactory.createEmptyBorder(12, 0, 12, 0));
         btnEntendido.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Al hacer clic, simplemente destruimos el cartel flotante
+        btnEntendido.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) { btnEntendido.setBackground(new Color(39, 174, 96)); }
+            public void mouseExited(java.awt.event.MouseEvent evt) { btnEntendido.setBackground(new Color(46, 204, 113)); }
+        });
+
         btnEntendido.addActionListener(e -> dialogoReglas.dispose());
 
-        // Panel contenedor inferior para darle aire al botón
         JPanel panelInferior = new JPanel(new BorderLayout());
-        panelInferior.setBackground(new Color(20, 20, 20, 0)); // Transparente
-        panelInferior.setBorder(BorderFactory.createEmptyBorder(10, 40, 25, 40));
+        panelInferior.setOpaque(false);
+        panelInferior.setBorder(BorderFactory.createEmptyBorder(10, 45, 30, 45));
         panelInferior.add(btnEntendido, BorderLayout.CENTER);
 
         panelContenedor.add(panelInferior, BorderLayout.SOUTH);
 
-        // 6. Seteamos el panel y mostramos
         dialogoReglas.setContentPane(panelContenedor);
         dialogoReglas.setVisible(true);
     }
@@ -136,7 +159,6 @@ public class PanelMenu extends JPanel {
             int anchoFondo = imgFondo.getWidth(null);
             int altoFondo = imgFondo.getHeight(null);
 
-            // Bucles para rellenar absolutamente toda la pantalla gigante en mosaico
             for (int x = 0; x < getWidth(); x += anchoFondo) {
                 for (int y = 0; y < getHeight(); y += altoFondo) {
                     g.drawImage(imgFondo, x, y, this);

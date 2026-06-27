@@ -71,14 +71,25 @@ public class VentanaPrincipal extends JFrame {
         hudSuperior.add(txtHUD);
         actualizarHUD();
 
-        JButton btnReiniciar = new JButton("REINICIAR [R]");
+        JButton btnVolumen = new JButton(GestorAudio.isSonidoActivo() ? "Sonido: ON" : "Sonido: OFF");
+        btnVolumen.setBackground(GestorAudio.isSonidoActivo() ? new Color(52, 73, 94) : new Color(127, 140, 141));
+        btnVolumen.setForeground(Color.WHITE);
+        btnVolumen.setFocusable(false); // Crucial para que las flechas del teclado sigan moviendo al jugador
+        btnVolumen.addActionListener(e -> {
+            GestorAudio.toggleSonido();
+            btnVolumen.setText(GestorAudio.isSonidoActivo() ? "Sonido: ON" : "Sonido: OFF");
+            btnVolumen.setBackground(GestorAudio.isSonidoActivo() ? new Color(52, 73, 94) : new Color(127, 140, 141));
+        });
+        hudSuperior.add(btnVolumen);
+
+        JButton btnReiniciar = new JButton("Reiniciar [R]");
         btnReiniciar.setBackground(new Color(230, 126, 34));
         btnReiniciar.setForeground(Color.WHITE);
         btnReiniciar.setFocusable(false);
         btnReiniciar.addActionListener(e -> gestor.reiniciarNivel());
         hudSuperior.add(btnReiniciar);
 
-        JButton btnMenu = new JButton("MENÚ PRINCIPAL [M]");
+        JButton btnMenu = new JButton("Menú principal [M]");
         btnMenu.setBackground(new Color(149, 165, 166));
         btnMenu.setForeground(Color.WHITE);
         btnMenu.setFocusable(false);
@@ -112,6 +123,6 @@ public class VentanaPrincipal extends JFrame {
         String time = gestor.getTiempoFormateado();
 
         // Clavamos la estética exacta en la pantalla principal
-        txtHUD.setText(nivel + " | moves: " + moves + "   pushes: " + pushes + "   time: " + time);
+        txtHUD.setText(nivel + " | Movimientos: " + moves + "   Empujes: " + pushes + "   Tiempo: " + time);
     }
 }

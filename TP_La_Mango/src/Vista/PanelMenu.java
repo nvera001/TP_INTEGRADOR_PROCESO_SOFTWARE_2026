@@ -18,22 +18,18 @@ public class PanelMenu extends JPanel {
         gbc.insets = new Insets(15, 15, 15, 15); // Espaciado entre botones
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // --- FUENTES ---
         Font fuenteTitulo = new Font("Impact", Font.PLAIN, 72);
         Font fuenteSubtitulo = new Font("Segoe UI", Font.BOLD, 18);
         Font fuenteBotones = new Font("Segoe UI", Font.BOLD, 16);
 
-        // 1. Título Principal
         JLabel txtTitulo = new JLabel("SOKOBAN", SwingConstants.CENTER);
         txtTitulo.setFont(fuenteTitulo);
         txtTitulo.setForeground(new Color(243, 156, 18)); // Naranja Gaming
         gbc.gridy = 0;
         add(txtTitulo, gbc);
 
-        // Espacio estético antes de los botones
         gbc.insets = new Insets(40, 15, 15, 15);
 
-        // 3. Botón Iniciar Juego (Verde)
         JButton btnJugar = crearBoton("INICIAR JUEGO", fuenteBotones, new Color(46, 204, 113));
         btnJugar.addActionListener(e -> accion.alIniciarJuego());
         gbc.gridy = 2;
@@ -41,19 +37,16 @@ public class PanelMenu extends JPanel {
 
         gbc.insets = new Insets(15, 15, 15, 15);
 
-        // 4. Botón Reglas de Juego (Azul)
         JButton btnReglas = crearBoton("REGLAS DE JUEGO", fuenteBotones, new Color(52, 152, 219));
         btnReglas.addActionListener(e -> mostrarReglas());
         gbc.gridy = 3;
         add(btnReglas, gbc);
 
-        // 5. Botón Salir (Rojo)
         JButton btnSalir = crearBoton("SALIR DEL JUEGO", fuenteBotones, new Color(231, 76, 60));
         btnSalir.addActionListener(e -> System.exit(0));
         gbc.gridy = 4;
         add(btnSalir, gbc);
 
-        // 6. Botón de Volumen (Gris Azulado) - Agregado correctamente al panel
         JButton btnVolumen = new JButton(GestorAudio.isSonidoActivo() ? "🔊 SONIDO: ON" : "🔇 SONIDO: OFF");
         btnVolumen.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnVolumen.setForeground(Color.WHITE);

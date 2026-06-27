@@ -4,11 +4,10 @@ import javax.sound.sampled.*;
 import java.net.URL;
 
 public class GestorAudio {
-    // Variable global que recuerda si el usuario sacó el volumen
     private static boolean sonidoActivo = true;
 
     public static void toggleSonido() {
-        sonidoActivo = !sonidoActivo; // Invierte el estado (ON -> OFF / OFF -> ON)
+        sonidoActivo = !sonidoActivo;
     }
 
     public static boolean isSonidoActivo() {
@@ -16,7 +15,7 @@ public class GestorAudio {
     }
 
     public void reproducirSonido(String nombreArchivo) {
-        if (!sonidoActivo) return; // Si está desactivado, el método se corta acá y no suena nada
+        if (!sonidoActivo) return;
 
         try {
             URL urlStream = getClass().getResource("/Vista/recursos/audios/" + nombreArchivo);

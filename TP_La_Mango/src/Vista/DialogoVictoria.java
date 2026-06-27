@@ -7,21 +7,19 @@ public class DialogoVictoria extends JDialog {
 
     public interface AccionVictoria {
         void avanzarSiguienteNivel();
-        void volverAlMenu(); // Única adición a tu interfaz
+        void volverAlMenu();
     }
 
     public DialogoVictoria(Window padre, int nivel, int movs, int empujes, String tiempo, AccionVictoria accion) {
         super(padre, "¡Nivel Completado!", ModalityType.APPLICATION_MODAL);
         setUndecorated(true);
-        setSize(nivel == 3 ? 500 : 450, 400); // Un poco más ancho en nivel 3 para los dos botones
+        setSize(nivel == 3 ? 500 : 450, 400);
         setLocationRelativeTo(padre);
 
-        // Formateo de números tipo Arcade
         String nivelFormateado = String.format("%02d", nivel);
         String movsFormateados = String.format("%04d", movs);
         String empujesFormateados = String.format("%04d", empujes);
 
-        // Contenedor principal: Si es nivel 3 dibuja tu fondo en mosaico
         JPanel panel = new JPanel(new BorderLayout(10, 10)) {
             private final CargadorRecursos cargador = new CargadorRecursos();
 
@@ -43,20 +41,17 @@ public class DialogoVictoria extends JDialog {
             }
         };
 
-        // Mantiene tu color si no es el nivel final
         if (nivel != 3) {
             panel.setBackground(new Color(25, 25, 25));
         }
         panel.setBorder(BorderFactory.createLineBorder(new Color(243, 156, 18), 3)); // Borde naranja
 
-        // Título de la ventana
         JLabel txtTitulo = new JLabel(nivel == 3 ? "¡JUEGO COMPLETADO!" : "¡NIVEL COMPLETADO!", SwingConstants.CENTER);
         txtTitulo.setFont(new Font("Impact", Font.PLAIN, 36));
         txtTitulo.setForeground(new Color(46, 204, 113)); // Verde victoria
         txtTitulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 10, 10));
         panel.add(txtTitulo, BorderLayout.NORTH);
 
-        // HTML limpio y compatible con el viejo motor de Swing
         String htmlEstadisticas = "<html>"
                 + "<body style='color: white; font-family: \"Segoe UI\", sans-serif; text-align: center;'>"
                 + "  <p style='font-size: 14px; color: #BDC3C7; font-weight: bold; margin-bottom: 15px;'>ESTADÍSTICAS</p>"
@@ -72,13 +67,11 @@ public class DialogoVictoria extends JDialog {
         JLabel txtStats = new JLabel(htmlEstadisticas, SwingConstants.CENTER);
         panel.add(txtStats, BorderLayout.CENTER);
 
-        // Panel inferior para el botón o botones
         JPanel panelBoton = new JPanel(new BorderLayout());
         panelBoton.setOpaque(false);
         panelBoton.setBorder(BorderFactory.createEmptyBorder(10, 40, 30, 40));
 
         if (nivel == 3) {
-            // CONDICIÓN JUEGO TERMINADO: Dos botones en paralelo
             JPanel panelDosBotones = new JPanel(new GridLayout(1, 2, 15, 0));
             panelDosBotones.setOpaque(false);
 
@@ -107,7 +100,6 @@ public class DialogoVictoria extends JDialog {
             panelDosBotones.add(btnSalir);
             panelBoton.add(panelDosBotones, BorderLayout.CENTER);
         } else {
-            // CONDICIÓN NORMAL: Tu botón verde original de siempre
             JButton btnSiguiente = new JButton("CONTINUAR AL SIGUIENTE NIVEL");
             btnSiguiente.setFont(new Font("Segoe UI", Font.BOLD, 13));
             btnSiguiente.setForeground(Color.WHITE);

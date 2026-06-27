@@ -29,7 +29,6 @@ public class VentanaPrincipal extends JFrame {
 
         mostrarMenuPrincipal();
 
-        // Capturador de teclado
         addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 if (!juegoIniciado) return;
@@ -116,13 +115,11 @@ public class VentanaPrincipal extends JFrame {
     public void actualizarHUD() {
         if (txtHUD == null || gestor == null) return;
 
-        // Formateamos con ceros a la izquierda igual que en tu foto
         String nivel = String.format("%02d", gestor.getNivelActual());
         String moves = String.format("%04d", gestor.getMovimientos());
         String pushes = String.format("%04d", gestor.getEmpujes());
         String time = gestor.getTiempoFormateado();
 
-        // Clavamos la estética exacta en la pantalla principal
         txtHUD.setText(nivel + " | Movimientos: " + moves + "   Empujes: " + pushes + "   Tiempo: " + time);
     }
 }

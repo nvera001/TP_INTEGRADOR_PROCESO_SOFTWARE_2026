@@ -44,8 +44,6 @@ public class GestorJuego {
         this.ventana = ventana;
     }
 
-    // --- CONTROL DE FLUJO DEL JUEGO ---
-
     public void iniciarJuego() {
         indiceNivelActual = 0;
         cargarNivel(indiceNivelActual);
@@ -68,26 +66,22 @@ public class GestorJuego {
             return;
         }
 
-        // Reseteamos estadísticas físicas
         this.movimientosNivel = 0;
         this.empujesNivel = 0;
 
-        // REINICIAR EL RELOJ DESDE CERO
         this.segundosTranscurridos = 0;
         if (timerReloj != null) {
-            timerReloj.stop(); // Frena el timer del nivel anterior si existía
+            timerReloj.stop();
         }
 
-        // Creamos el cronómetro: cada 1000ms suma un segundo y actualiza el HUD en pantalla
         timerReloj = new javax.swing.Timer(1000, e -> {
             segundosTranscurridos++;
             if (ventana != null) {
-                ventana.actualizarHUD(); // Le avisa a la barra superior que cambie el tiempo
+                ventana.actualizarHUD();
             }
         });
-        timerReloj.start(); // Arranca el tiempo
+        timerReloj.start();
 
-        // Leemos el archivo y cargamos la matriz (Esto queda igual)
         lector.cargarArchivo(rutasNiveles[indice]);
         String datos = lector.getCadena();
         this.matriz = generador.generarMatrizDesdeString(datos);
@@ -114,7 +108,7 @@ public class GestorJuego {
 
         if (destino == null) {
             matriz.moverObjeto(jugador, proxPosJugador);
-            movimientosNivel++; // Suma al HUD en vivo
+            movimientosNivel++;
             seMovio = true;
             audio.reproducirSonido("paso.wav");
         }
@@ -158,7 +152,7 @@ public class GestorJuego {
 
                         @Override
                         public void volverAlMenu() {
-                            GestorJuego.this.volverAlMenu(); // Te regresa al menú principal
+                            GestorJuego.this.volverAlMenu();
                         }
                     }
             );
@@ -166,7 +160,6 @@ public class GestorJuego {
         }
     }
 
-    // Métodos para que la ventana pueda chusmear los datos en vivo
     public int getNivelActual() {
         return indiceNivelActual + 1;
     }

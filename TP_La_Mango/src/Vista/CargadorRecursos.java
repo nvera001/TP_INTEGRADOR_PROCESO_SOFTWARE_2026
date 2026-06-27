@@ -17,8 +17,6 @@ public class CargadorRecursos {
 
     private void cargarImagenes() {
         try {
-            // Usamos rutas absolutas dentro del Classpath. 
-            // Ojo con las mayúsculas: /Vista/recursos/
             imagenes.put("piso", leerImagen("/Vista/recursos/imagenes/piso.png"));
             imagenes.put("jugador", leerImagen("/Vista/recursos/imagenes/jugador.png"));
             imagenes.put("pared", leerImagen("/Vista/recursos/imagenes/pared.png"));
@@ -37,7 +35,6 @@ public class CargadorRecursos {
         }
     }
 
-    // Método auxiliar para validar que el archivo realmente exista antes de leerlo
     private Image leerImagen(String ruta) throws IOException {
         URL url = getClass().getResource(ruta);
         if (url == null) {

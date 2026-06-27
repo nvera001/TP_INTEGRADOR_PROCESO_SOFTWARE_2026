@@ -27,10 +27,8 @@ public class Matriz {
 
     public void colocarObjeto(GameObject obj) {
         if (obj instanceof Meta) {
-            // Si es una Meta, se guarda en la capa de fondo
             metas.add((Meta) obj);
         } else {
-            // Si es un sólido (Pared, Caja, Jugador), va a la grilla normal
             Posicion pos = obj.getPosicion();
             grilla[pos.getY()][pos.getX()] = obj;
         }
@@ -38,7 +36,7 @@ public class Matriz {
 
     public GameObject obtenerObjetoEn(Posicion pos) {
         if (pos.getX() < 0 || pos.getX() >= columnas || pos.getY() < 0 || pos.getY() >= filas) {
-            return null; // Fuera de los límites
+            return null;
         }
         return grilla[pos.getY()][pos.getX()];
     }

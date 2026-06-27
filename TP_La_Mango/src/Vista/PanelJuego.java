@@ -19,7 +19,7 @@ public class PanelJuego extends JPanel {
 
     public PanelJuego(Matriz matriz) {
         this.matriz = matriz;
-        this.cargador = new CargadorRecursos(); // Inicializa y carga las imágenes
+        this.cargador = new CargadorRecursos();
 
         this.setBackground(Color.BLACK);
     }
@@ -35,7 +35,6 @@ public class PanelJuego extends JPanel {
                 }
             }
         } else {
-            // Por las dudas, si no carga la imagen, que quede negro de respaldo
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, getWidth(), getHeight());
         }
@@ -63,13 +62,11 @@ public class PanelJuego extends JPanel {
                 int px = offsetX + (x * tileSize);
                 int py = offsetY + (y * tileSize);
 
-                // Capa 1: El Piso base (Siempre se dibuja)
                 Image imgPiso = cargador.getImagen("piso");
                 if (imgPiso != null) {
                     g.drawImage(imgPiso, px, py, tileSize, tileSize, null);
                 }
 
-                // Capa 2: Las Metas (Se dibujan arriba del piso)
                 if (matriz.esMeta(posActual)) {
                     Image imgMeta = cargador.getImagen("meta");
                     if (imgMeta != null) {
@@ -77,7 +74,6 @@ public class PanelJuego extends JPanel {
                     }
                 }
 
-                // Capa 3: Las Entidades sólidas (Se dibujan arriba de todo)
                 if (obj instanceof ParedSimple) {
                     g.drawImage(cargador.getImagen("pared"), px, py, tileSize, tileSize, null);
                 } 

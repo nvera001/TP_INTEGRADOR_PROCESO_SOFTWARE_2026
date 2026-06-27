@@ -59,6 +59,6 @@ public class TraductorTXT {
             System.out.println("Error: Carácter desconocido en el mapa -> " + c);
         }
 
-        return null; // Retorna null si es un espacio vacío o un carácter no reconocido
+        return null;
     }
 }

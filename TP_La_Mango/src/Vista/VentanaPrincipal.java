@@ -73,7 +73,7 @@ public class VentanaPrincipal extends JFrame {
         JButton btnVolumen = new JButton(GestorAudio.isSonidoActivo() ? "Sonido: ON" : "Sonido: OFF");
         btnVolumen.setBackground(GestorAudio.isSonidoActivo() ? new Color(52, 73, 94) : new Color(127, 140, 141));
         btnVolumen.setForeground(Color.WHITE);
-        btnVolumen.setFocusable(false); // Crucial para que las flechas del teclado sigan moviendo al jugador
+        btnVolumen.setFocusable(false);
         btnVolumen.addActionListener(e -> {
             GestorAudio.toggleSonido();
             btnVolumen.setText(GestorAudio.isSonidoActivo() ? "Sonido: ON" : "Sonido: OFF");

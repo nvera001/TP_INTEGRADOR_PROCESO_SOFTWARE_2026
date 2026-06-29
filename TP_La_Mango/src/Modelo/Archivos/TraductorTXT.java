@@ -1,7 +1,8 @@
 package Modelo.Archivos;
 
 import Modelo.Entidades.GameObject;
-import Modelo.Entidades.Jugador;
+import Modelo.Entidades.MuroCerrado;
+import Modelo.Entidades.Cerrojo;
 import Modelo.Entidades.CajaSimple;
 import Modelo.Decoradores.CajaFragil;
 import Modelo.Decoradores.CajaLlave;
@@ -26,12 +27,17 @@ public class TraductorTXT {
         CreadorJugador cjugador = new CreadorJugador();
         CreadorMeta cmeta = new CreadorMeta();
 
+
         diccionarioCadenas.put('#', cps);
         diccionarioCadenas.put('C', ccs);
         diccionarioCadenas.put('P', cjugador);
         diccionarioCadenas.put('X', cmeta);
 
-        // Caja fragil.
+        diccionarioCadenas.put('L', posicion -> new Cerrojo(posicion));
+
+        diccionarioCadenas.put('M', posicion -> new MuroCerrado(posicion));
+
+
         diccionarioCadenas.put('F', new CreadorGameObject() {
             @Override
             public GameObject crearGameObject(Posicion posicion) {

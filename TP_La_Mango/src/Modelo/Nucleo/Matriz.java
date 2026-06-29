@@ -4,6 +4,9 @@ import Modelo.Entidades.Caja;
 import Modelo.Entidades.GameObject;
 import Modelo.Entidades.Jugador;
 import Modelo.Entidades.Meta;
+import Modelo.Entidades.Cerrojo;
+import Modelo.Entidades.MuroCerrado;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +17,15 @@ public class Matriz {
     private final int filas;
     private final int columnas;
     private final List<Meta> metas;
+    private final List<Cerrojo> cerrojos;
+    private boolean murosAbiertos = false;
 
     public Matriz(int filas, int columnas) {
         this.filas = filas;
         this.columnas = columnas;
         this.grilla = new GameObject[filas][columnas];
         this.metas = new ArrayList<>();
+        this.cerrojos = new ArrayList<>();
     }
 
     public int getFilas() { return this.filas; }
@@ -28,6 +34,8 @@ public class Matriz {
     public void colocarObjeto(GameObject obj) {
         if (obj instanceof Meta) {
             metas.add((Meta) obj);
+        } else if (obj instanceof Cerrojo) {
+            cerrojos.add((Cerrojo) obj);
         } else {
             Posicion pos = obj.getPosicion();
             grilla[pos.getY()][pos.getX()] = obj;
@@ -38,7 +46,14 @@ public class Matriz {
         if (pos.getX() < 0 || pos.getX() >= columnas || pos.getY() < 0 || pos.getY() >= filas) {
             return null;
         }
-        return grilla[pos.getY()][pos.getX()];
+
+        GameObject obj = grilla[pos.getY()][pos.getX()];
+
+        if (obj instanceof MuroCerrado && murosAbiertos) {
+            return null;
+        }
+
+        return obj;
     }
 
     public void moverObjeto(GameObject obj, Posicion nuevaPos) {
@@ -46,6 +61,8 @@ public class Matriz {
         grilla[viejaPos.getY()][viejaPos.getX()] = null;
         grilla[nuevaPos.getY()][nuevaPos.getX()] = obj;
         obj.setPosicion(nuevaPos);
+
+        actualizarEstadoMuros();
     }
 
     public boolean esMeta(Posicion pos) {
@@ -55,6 +72,31 @@ public class Matriz {
             }
         }
         return false;
+    }
+
+    public boolean esCerrojo(Posicion pos) {
+        for (Cerrojo cerrojo : cerrojos) {
+            if (cerrojo.getPosicion().equals(pos)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean areMurosAbiertos() {
+        return this.murosAbiertos;
+    }
+
+    private void actualizarEstadoMuros() {
+        for (Cerrojo cerrojo : cerrojos) {
+            GameObject objEncima = grilla[cerrojo.getPosicion().getY()][cerrojo.getPosicion().getX()];
+
+            if (objEncima != null && objEncima.getSimbolo() == 'K') {
+                this.murosAbiertos = true;
+                return;
+            }
+        }
+        this.murosAbiertos = false;
     }
 
     public boolean estanTodasLasMetasCubiertas() {

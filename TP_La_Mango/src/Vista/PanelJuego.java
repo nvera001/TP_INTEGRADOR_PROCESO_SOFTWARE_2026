@@ -1,6 +1,6 @@
 package Vista;
 
-import Modelo.Entidades.CajaSimple;
+import Modelo.Entidades.MuroCerrado;
 import Modelo.Entidades.GameObject;
 import Modelo.Entidades.Jugador;
 import Modelo.Entidades.ParedSimple;
@@ -74,11 +74,24 @@ public class PanelJuego extends JPanel {
                     }
                 }
 
+                else if (matriz.esCerrojo(posActual)) {
+                    Image imgCerrojo = cargador.getImagen("cerrojo");
+                    if (imgCerrojo != null) {
+                        g.drawImage(imgCerrojo, px, py, tileSize, tileSize, null);
+                    }
+                }
+
                 if (obj instanceof ParedSimple) {
                     g.drawImage(cargador.getImagen("pared"), px, py, tileSize, tileSize, null);
-                } 
+                }
                 else if (obj instanceof Jugador) {
                     g.drawImage(cargador.getImagen("jugador"), px, py, tileSize, tileSize, null);
+                }
+                // --- 3. NUEVO: EL MURO CERRADO VA ACÁ (Solo se dibuja si están bloqueados) ---
+                else if (obj instanceof MuroCerrado) {
+                    if (!matriz.areMurosAbiertos()) {
+                        g.drawImage(cargador.getImagen("muro"), px, py, tileSize, tileSize, null);
+                    }
                 }
                 else if (obj instanceof Caja) {
                     char simbolo = obj.getSimbolo();

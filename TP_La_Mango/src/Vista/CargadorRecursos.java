@@ -28,6 +28,9 @@ public class CargadorRecursos {
             imagenes.put("caja_fragil", leerImagen("/Vista/recursos/imagenes/caja_fragil.png"));
             imagenes.put("caja_llave", leerImagen("/Vista/recursos/imagenes/caja_llave.png"));
 
+            imagenes.put("cerrojo", leerImagen("/Vista/recursos/imagenes/cerrojo.png"));
+            imagenes.put("muro", leerImagen("/Vista/recursos/imagenes/muro.png"));
+
             System.out.println("¡Todas las imágenes se cargaron con éxito desde el Classpath!");
         } catch (IOException e) {
             System.err.println("Error crítico: No se pudo cargar algún asset del Sokoban.");

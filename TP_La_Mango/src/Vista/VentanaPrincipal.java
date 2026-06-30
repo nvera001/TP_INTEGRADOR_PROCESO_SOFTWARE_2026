@@ -15,6 +15,7 @@ public class VentanaPrincipal extends JFrame {
     private JLabel txtHUD;
 
     private JButton btnUndo;
+    private JButton btnVolumen;
 
     private boolean undoHabilitadoPorNivel = true;
 
@@ -49,6 +50,7 @@ public class VentanaPrincipal extends JFrame {
                             gestor.deshacerCincoMovimientos();
                         }
                     }
+                    case KeyEvent.VK_S -> alternarSonido();
                 }
             }
         });
@@ -79,15 +81,13 @@ public class VentanaPrincipal extends JFrame {
         hudSuperior.add(txtHUD);
         actualizarHUD();
 
-        JButton btnVolumen = new JButton(GestorAudio.isSonidoActivo() ? "Sonido: ON" : "Sonido: OFF");
+        btnVolumen = new JButton(GestorAudio.isSonidoActivo() ? "Sonido: ON [S]" : "Sonido: OFF [S]");
         btnVolumen.setBackground(GestorAudio.isSonidoActivo() ? new Color(52, 73, 94) : new Color(127, 140, 141));
         btnVolumen.setForeground(Color.WHITE);
         btnVolumen.setFocusable(false);
-        btnVolumen.addActionListener(e -> {
-            GestorAudio.toggleSonido();
-            btnVolumen.setText(GestorAudio.isSonidoActivo() ? "Sonido: ON" : "Sonido: OFF");
-            btnVolumen.setBackground(GestorAudio.isSonidoActivo() ? new Color(52, 73, 94) : new Color(127, 140, 141));
-        });
+
+        // Ahora el clic del mouse hace exactamente lo mismo que la tecla S
+        btnVolumen.addActionListener(e -> alternarSonido());
         hudSuperior.add(btnVolumen);
 
         btnUndo = new JButton("Deshacer [Z]");
@@ -159,5 +159,15 @@ public class VentanaPrincipal extends JFrame {
         String time = gestor.getTiempoFormateado();
 
         txtHUD.setText(nivel + " | Movimientos: " + moves + "   Empujes: " + pushes + "   Tiempo: " + time);
+    }
+
+    private void alternarSonido() {
+        GestorAudio.toggleSonido();
+
+        if (btnVolumen != null) {
+            // Le agregamos el [S] a las dos opciones de texto
+            btnVolumen.setText(GestorAudio.isSonidoActivo() ? "Sonido: ON [S]" : "Sonido: OFF [S]");
+            btnVolumen.setBackground(GestorAudio.isSonidoActivo() ? new Color(52, 73, 94) : new Color(127, 140, 141));
+        }
     }
 }

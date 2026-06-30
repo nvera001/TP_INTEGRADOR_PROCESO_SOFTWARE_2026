@@ -41,6 +41,8 @@ public class GestorJuego {
     private final Stack<Comando> historial = new Stack<>();
     private int usosUndoTotalNivel = 0;
 
+    private int cantUndoNivel = 0;
+
     public GestorJuego() {
         this.lector = new LectorTXT();
         this.generador = new GeneradorNivel();
@@ -68,6 +70,8 @@ public class GestorJuego {
     }
 
     private void cargarNivel(int indice) {
+        this.cantUndoNivel = 0;
+
         if (indice >= rutasNiveles.length) {
             volverAlMenu();
             return;
@@ -168,6 +172,8 @@ public class GestorJuego {
                     getNivelActual(),
                     movimientosNivel,
                     empujesNivel,
+                    this.cantUndoNivel,    // NUEVO: Cantidad de undos
+                    calcularPuntaje(),     // NUEVO: Puntaje calculado
                     getTiempoFormateado(),
                     new DialogoVictoria.AccionVictoria() {
                         @Override
@@ -239,6 +245,7 @@ public class GestorJuego {
         }
 
         usosUndoTotalNivel++; // Registramos el uso (1, 2 o 3)
+        this.cantUndoNivel++;
         System.out.println("Undo ejecutado con éxito. Uso número: " + usosUndoTotalNivel);
 
         // REGLA CLAVE: Si llegó al tercer uso, ocultamos el botón de inmediato
@@ -253,4 +260,11 @@ public class GestorJuego {
             ventana.actualizarHUD();
         }
     }
+    public int calcularPuntaje() {
+        int base = 5000;
+        int penalizacion = (movimientosNivel * 10) + (empujesNivel * 20) + (cantUndoNivel * 100);
+        // Retorna el cálculo, asegurando un piso mínimo de 100 puntos
+        return Math.max(100, base - penalizacion);
+    }
+
 }

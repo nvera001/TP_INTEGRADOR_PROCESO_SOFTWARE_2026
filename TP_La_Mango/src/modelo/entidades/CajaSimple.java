@@ -9,6 +9,10 @@ public class CajaSimple extends GameObject implements Caja {
         super(posicion, '$');
     }
 
+    public CapaJuego getCapa() {
+        return CapaJuego.ELEMENTO;
+    }
+
     public boolean serEmpujada(Direccion dir, Matriz matriz, GameObject entidadA_Mover) {
         Posicion proxPosCaja = entidadA_Mover.getPosicion().sumar(dir.getDeltaX(), dir.getDeltaY());
         GameObject destinoDeCaja = matriz.obtenerObjetoEn(proxPosCaja);

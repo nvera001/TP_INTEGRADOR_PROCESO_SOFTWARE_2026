@@ -9,10 +9,10 @@ public class Jugador extends GameObject {
         super(pos, '@');
     }
 
-    /**
-     * Punto de acceso global PURO.
-     * Permite obtener al jugador desde cualquier parte del código sin alterar su estado.
-     */
+    public CapaJuego getCapa() {
+        return CapaJuego.ELEMENTO;
+    }
+
     public static Jugador getInstancia() {
         if (instancia == null) {
             instancia = new Jugador(new Posicion(0, 0));

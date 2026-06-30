@@ -6,144 +6,129 @@ import java.util.List;
 
 public class Matriz {
 
-    private final GameObject[][] grilla;
+    private final GameObject[][] capaSuelo;
+    private final GameObject[][] capaElementos;
+
     private final int filas;
     private final int columnas;
-    private final List<Meta> metas;
-    private final List<Cerrojo> cerrojos;
-    private final List<MuroCerrado> muros;
     private boolean murosAbiertos = false;
-    private final List<TerrenoResbaladizo> terrenosResbaladizos = new ArrayList<>();
 
     public Matriz(int filas, int columnas) {
         this.filas = filas;
         this.columnas = columnas;
-        this.grilla = new GameObject[filas][columnas];
-        this.metas = new ArrayList<>();
-        this.cerrojos = new ArrayList<>();
-        this.muros = new ArrayList<>();
+        this.capaSuelo = new GameObject[filas][columnas];
+        this.capaElementos = new GameObject[filas][columnas];
     }
 
     public int getFilas() { return this.filas; }
     public int getColumnas() { return this.columnas; }
 
     public void colocarObjeto(GameObject obj) {
-        if (obj instanceof Meta) {
-            metas.add((Meta) obj);
-        } else if (obj instanceof TerrenoResbaladizo) {
-            terrenosResbaladizos.add((TerrenoResbaladizo) obj);
-        } else if (obj instanceof Cerrojo) {
-            cerrojos.add((Cerrojo) obj);
-        } else if (obj instanceof MuroCerrado) {
-            muros.add((MuroCerrado) obj);
+        Posicion pos = obj.getPosicion();
+        if (obj.getCapa() == GameObject.CapaJuego.SUELO) {
+            capaSuelo[pos.getY()][pos.getX()] = obj;
         } else {
-            Posicion pos = obj.getPosicion();
-            grilla[pos.getY()][pos.getX()] = obj;
+            capaElementos[pos.getY()][pos.getX()] = obj;
         }
     }
 
     public GameObject obtenerObjetoEn(Posicion pos) {
-        if (pos.getX() < 0 || pos.getX() >= columnas || pos.getY() < 0 || pos.getY() >= filas) {
-            return null;
-        }
+        if (esPosicionInvalida(pos)) return null;
 
-        if (!murosAbiertos && esMuro(pos)) {
-            GameObject objEnGrilla = grilla[pos.getY()][pos.getX()];
-            if (objEnGrilla != null) {
-                return objEnGrilla;
+        GameObject elemento = capaElementos[pos.getY()][pos.getX()];
+        if (elemento != null) {
+            if (elemento.esMuroCerrado() && murosAbiertos) {
+                return null;
             }
-            return obtenerMuroEn(pos);
+            return elemento;
         }
+        return null;
+    }
 
-        return grilla[pos.getY()][pos.getX()];
+    public GameObject obtenerSueloEn(Posicion pos) {
+        if (esPosicionInvalida(pos)) return null;
+        return capaSuelo[pos.getY()][pos.getX()];
     }
 
     public void moverObjeto(GameObject obj, Posicion nuevaPos) {
         Posicion viejaPos = obj.getPosicion();
-        grilla[viejaPos.getY()][viejaPos.getX()] = null;
-        grilla[nuevaPos.getY()][nuevaPos.getX()] = obj;
+        capaElementos[viejaPos.getY()][viejaPos.getX()] = null;
+        capaElementos[nuevaPos.getY()][nuevaPos.getX()] = obj;
         obj.setPosicion(nuevaPos);
 
         actualizarEstadoMuros();
     }
 
     public boolean esMeta(Posicion pos) {
-        for (Meta meta : metas) {
-            if (meta.getPosicion().equals(pos)) {
-                return true;
-            }
-        }
-        return false;
+        GameObject suelo = obtenerSueloEn(pos);
+        return suelo != null && suelo.esMeta();
     }
 
     public boolean esCerrojo(Posicion pos) {
-        for (Cerrojo cerrojo : cerrojos) {
-            if (cerrojo.getPosicion().equals(pos)) {
-                return true;
-            }
-        }
-        return false;
+        GameObject suelo = obtenerSueloEn(pos);
+        return suelo != null && suelo.esCerrojo();
     }
 
     public boolean esMuro(Posicion pos) {
-        for (MuroCerrado muro : muros) {
-            if (muro.getPosicion().equals(pos)) return true;
-        }
-        return false;
+        GameObject elemento = capaElementos[pos.getY()][pos.getX()];
+        return elemento != null && elemento.esMuroCerrado();
     }
 
-    private MuroCerrado obtenerMuroEn(Posicion pos) {
-        for (MuroCerrado muro : muros) {
-            if (muro.getPosicion().equals(pos)) return muro;
-        }
-        return null;
+    public boolean esResbaladizo(Posicion pos) {
+        GameObject suelo = obtenerSueloEn(pos);
+        return suelo != null && suelo.esResbaladizo();
     }
 
-    public boolean areMurosAbiertos() {
+    public boolean MurosAbiertos() {
         return this.murosAbiertos;
     }
 
     private void actualizarEstadoMuros() {
-        for (Cerrojo cerrojo : cerrojos) {
-            GameObject objEncima = grilla[cerrojo.getPosicion().getY()][cerrojo.getPosicion().getX()];
-
-            if (objEncima instanceof Caja && ((Caja) objEncima).contieneLlave()) {
-                this.murosAbiertos = true;
-                return;
+        for (int y = 0; y < filas; y++) {
+            for (int x = 0; x < columnas; x++) {
+                GameObject suelo = capaSuelo[y][x];
+                if (suelo != null && suelo.esCerrojo()) {
+                    GameObject elementoEncima = capaElementos[y][x];
+                    if (elementoEncima instanceof Caja && ((Caja) elementoEncima).contieneLlave()) {
+                        this.murosAbiertos = true;
+                        return;
+                    }
+                }
             }
         }
         this.murosAbiertos = false;
     }
 
     public boolean estanTodasLasMetasCubiertas() {
-        if (metas.isEmpty()) return false;
+        boolean alMenosUnaMeta = false;
 
-        for (Meta meta : metas) {
-            GameObject objEnFrente = obtenerObjetoEn(meta.getPosicion());
-
-            if (!(objEnFrente instanceof Caja)) {
-                return false;
+        for (int y = 0; y < filas; y++) {
+            for (int x = 0; x < columnas; x++) {
+                GameObject suelo = capaSuelo[y][x];
+                if (suelo != null && suelo.esMeta()) {
+                    alMenosUnaMeta = true;
+                    GameObject elementoEncima = capaElementos[y][x];
+                    if (!(elementoEncima instanceof Caja)) {
+                        return false;
+                    }
+                }
             }
         }
-        return true;
+        return alMenosUnaMeta;
     }
 
     public void eliminarObjeto(Posicion pos) {
-        if (pos.getX() >= 0 && pos.getX() < columnas && pos.getY() >= 0 && pos.getY() < filas) {
-            grilla[pos.getY()][pos.getX()] = null;
+        if (!esPosicionInvalida(pos)) {
+            capaElementos[pos.getY()][pos.getX()] = null;
         }
     }
 
     public GameObject obtenerObjetoGrillaPura(Posicion pos) {
-        return grilla[pos.getY()][pos.getX()];
+        if (esPosicionInvalida(pos)) return null;
+        return capaElementos[pos.getY()][pos.getX()];
     }
 
-    public boolean esResbaladizo(Posicion pos) {
-        for (TerrenoResbaladizo tr : terrenosResbaladizos) {
-            if (tr.getPosicion().equals(pos)) {
-                return true;
-            }
-        }
-        return false;
+    private boolean esPosicionInvalida(Posicion pos) {
+        return pos.getX() < 0 || pos.getX() >= columnas || pos.getY() < 0 || pos.getY() >= filas;
     }
 }

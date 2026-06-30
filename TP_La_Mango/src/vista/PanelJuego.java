@@ -82,7 +82,7 @@ public class PanelJuego extends JPanel {
                     }
                 }
 
-                if (matriz.esMuro(posActual) && !matriz.areMurosAbiertos()) {
+                if (matriz.esMuro(posActual) && !matriz.MurosAbiertos()) {
                     g.drawImage(cargador.getImagen("muro"), px, py, tileSize, tileSize, null);
                 }
 

@@ -76,6 +76,11 @@ public class PanelJuego extends JPanel {
                     if (imgCerrojo != null) {
                         g.drawImage(imgCerrojo, px, py, tileSize, tileSize, null);
                     }
+                } else if (matriz.esResbaladizo(posActual)) {
+                    Image imgResbaladizo = cargador.getImagen("resbaladizo");
+                    if (imgResbaladizo != null) {
+                        g.drawImage(imgResbaladizo, px, py, tileSize, tileSize, null);
+                    }
                 }
 
                 if (matriz.esMuro(posActual) && !matriz.areMurosAbiertos()) {

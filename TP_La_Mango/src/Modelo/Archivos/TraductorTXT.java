@@ -1,9 +1,6 @@
 package Modelo.Archivos;
 
-import Modelo.Entidades.GameObject;
-import Modelo.Entidades.MuroCerrado;
-import Modelo.Entidades.Cerrojo;
-import Modelo.Entidades.CajaSimple;
+import Modelo.Entidades.*;
 import Modelo.Decoradores.CajaFragil;
 import Modelo.Decoradores.CajaLlave;
 import Modelo.Fabricas.CreadorCajaSimple;
@@ -32,6 +29,7 @@ public class TraductorTXT {
         diccionarioCadenas.put('C', ccs);
         diccionarioCadenas.put('P', cjugador);
         diccionarioCadenas.put('X', cmeta);
+        diccionarioCadenas.put('S', posicion -> new TerrenoResbaladizo(posicion));
 
         diccionarioCadenas.put('L', posicion -> new Cerrojo(posicion));
 

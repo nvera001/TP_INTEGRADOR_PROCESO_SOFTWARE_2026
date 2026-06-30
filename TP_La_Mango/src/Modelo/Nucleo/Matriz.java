@@ -1,13 +1,6 @@
 package Modelo.Nucleo;
 
-import Modelo.Entidades.Caja;
-import Modelo.Entidades.GameObject;
-import Modelo.Entidades.Jugador;
-import Modelo.Entidades.Meta;
-import Modelo.Entidades.Cerrojo;
-import Modelo.Entidades.MuroCerrado;
-
-
+import Modelo.Entidades.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +13,7 @@ public class Matriz {
     private final List<Cerrojo> cerrojos;
     private final List<MuroCerrado> muros;
     private boolean murosAbiertos = false;
+    private final List<TerrenoResbaladizo> terrenosResbaladizos = new ArrayList<>();
 
     public Matriz(int filas, int columnas) {
         this.filas = filas;
@@ -36,6 +30,8 @@ public class Matriz {
     public void colocarObjeto(GameObject obj) {
         if (obj instanceof Meta) {
             metas.add((Meta) obj);
+        } else if (obj instanceof TerrenoResbaladizo) {
+            terrenosResbaladizos.add((TerrenoResbaladizo) obj);
         } else if (obj instanceof Cerrojo) {
             cerrojos.add((Cerrojo) obj);
         } else if (obj instanceof MuroCerrado) {
@@ -157,5 +153,14 @@ public class Matriz {
 
     public GameObject obtenerObjetoGrillaPura(Posicion pos) {
         return grilla[pos.getY()][pos.getX()];
+    }
+
+    public boolean esResbaladizo(Posicion pos) {
+        for (TerrenoResbaladizo tr : terrenosResbaladizos) {
+            if (tr.getPosicion().equals(pos)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

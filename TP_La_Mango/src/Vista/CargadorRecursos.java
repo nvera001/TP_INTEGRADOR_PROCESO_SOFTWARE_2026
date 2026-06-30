@@ -30,6 +30,8 @@ public class CargadorRecursos {
 
             imagenes.put("cerrojo", leerImagen("/Vista/recursos/imagenes/cerrojo.png"));
             imagenes.put("muro", leerImagen("/Vista/recursos/imagenes/muro.png"));
+            imagenes.put("resbaladizo", leerImagen("/Vista/recursos/imagenes/resbaladizo.png"));
+
 
             System.out.println("¡Todas las imágenes se cargaron con éxito desde el Classpath!");
         } catch (IOException e) {

@@ -43,6 +43,8 @@ public class GestorJuego {
 
     private int cantUndoNivel = 0;
 
+    private boolean estaDeslizando = false;
+
     public GestorJuego() {
         this.lector = new LectorTXT();
         this.generador = new GeneradorNivel();
@@ -115,6 +117,7 @@ public class GestorJuego {
     }
 
     public void intentarMover(Direccion dir) {
+        if (estaDeslizando) return;
         if (jugador == null || matriz == null) return;
 
         Posicion viejaPosJugador = jugador.getPosicion();
@@ -152,6 +155,10 @@ public class GestorJuego {
                 }
 
                 registrarComando(new ComandoMovimiento(jugador, viejaPosJugador, destino, viejaPosCaja, seRompioCaja));
+
+                if (matriz.esResbaladizo(destino.getPosicion())) {
+                    ejecutarDeslizamientoAnimado(destino, dir);
+                }
             }
         }
 
@@ -257,6 +264,33 @@ public class GestorJuego {
         int base = 5000;
         int penalizacion = (movimientosNivel * 10) + (empujesNivel * 20) + (cantUndoNivel * 100);
         return Math.max(100, base - penalizacion);
+    }
+
+    private void ejecutarDeslizamientoAnimado(GameObject caja, Direccion dir) {
+        estaDeslizando = true;
+
+        javax.swing.Timer timerGelo = new javax.swing.Timer(100, null);
+        timerGelo.addActionListener(e -> {
+            if (matriz.esResbaladizo(caja.getPosicion())) {
+                Posicion siguientePos = caja.getPosicion().sumar(dir.getDeltaX(), dir.getDeltaY());
+                GameObject obstaculo = matriz.obtenerObjetoEn(siguientePos);
+
+                if (obstaculo == null) {
+                    matriz.moverObjeto(caja, siguientePos);
+
+                    if (ventana != null) {
+                        ventana.actualizarPantalla();
+                    }
+                } else {
+                    timerGelo.stop();
+                    estaDeslizando = false; // Desbloquea el teclado
+                }
+            } else {
+                timerGelo.stop();
+                estaDeslizando = false;
+            }
+        });
+        timerGelo.start();
     }
 
 }

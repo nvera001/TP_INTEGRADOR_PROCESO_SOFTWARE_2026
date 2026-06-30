@@ -70,9 +70,12 @@ public class PanelJuego extends JPanel {
                     g.drawImage(cargador.getImagen("cerrojo"), px, py, tileSize, tileSize, null);
                 } else if (matriz.esResbaladizo(posActual)) {
                     g.drawImage(cargador.getImagen("resbaladizo"), px, py, tileSize, tileSize, null);
+                } else if (matriz.esMuro(posActual)) {
+                    if (!matriz.MurosAbiertos()) {
+                        g.drawImage(cargador.getImagen("muro"), px, py, tileSize, tileSize, null);
+                    }
                 }
 
-                // 3. Capa de Elementos Superiores (100% OCP sin instanceof)
                 GameObject obj = matriz.obtenerObjetoGrillaPura(posActual);
                 if (obj != null) {
                     char simbolo = obj.getSimbolo();
@@ -84,11 +87,7 @@ public class PanelJuego extends JPanel {
                         case 'F' -> claveImagen = "caja_fragil";
                         case 'Z' -> claveImagen = "caja_fragil_llave";
                         case 'K' -> claveImagen = "caja_llave";
-                        case 'M' -> {
-                            if (!matriz.MurosAbiertos()) {
-                                claveImagen = "muro";
-                            }
-                        }
+
                         case '$' -> {
                             if (matriz.esMeta(posActual)) {
                                 claveImagen = "caja_meta";

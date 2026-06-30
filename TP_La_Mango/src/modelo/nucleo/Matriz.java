@@ -37,11 +37,16 @@ public class Matriz {
 
         GameObject elemento = capaElementos[pos.getY()][pos.getX()];
         if (elemento != null) {
-            if (elemento.esMuroCerrado() && murosAbiertos) {
-                return null;
-            }
             return elemento;
         }
+
+        if (!murosAbiertos) {
+            GameObject suelo = capaSuelo[pos.getY()][pos.getX()];
+            if (suelo != null && suelo.esMuroCerrado()) {
+                return suelo;
+            }
+        }
+
         return null;
     }
 
@@ -70,8 +75,9 @@ public class Matriz {
     }
 
     public boolean esMuro(Posicion pos) {
-        GameObject elemento = capaElementos[pos.getY()][pos.getX()];
-        return elemento != null && elemento.esMuroCerrado();
+        if (esPosicionInvalida(pos)) return false;
+        GameObject suelo = capaSuelo[pos.getY()][pos.getX()];
+        return suelo != null && suelo.esMuroCerrado();
     }
 
     public boolean esResbaladizo(Posicion pos) {

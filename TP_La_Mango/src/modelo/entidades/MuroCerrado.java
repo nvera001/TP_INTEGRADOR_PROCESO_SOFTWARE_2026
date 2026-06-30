@@ -7,7 +7,7 @@ public class MuroCerrado extends GameObject {
         super(posicion, 'M');
     }
     public CapaJuego getCapa() {
-        return CapaJuego.ELEMENTO;
+        return CapaJuego.SUELO;
     }
     public boolean esMuroCerrado() {
         return true;

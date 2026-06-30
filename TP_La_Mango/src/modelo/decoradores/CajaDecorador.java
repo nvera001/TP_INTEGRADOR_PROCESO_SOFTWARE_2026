@@ -1,0 +1,31 @@
+package modelo.decoradores;
+
+import modelo.entidades.GameObject;
+import modelo.entidades.Caja;
+import modelo.nucleo.Posicion;
+import modelo.nucleo.Direccion;
+import modelo.nucleo.Matriz;
+
+public abstract class CajaDecorador extends GameObject implements Caja {
+    protected Caja cajaEnvoltorio;
+
+    public CajaDecorador(Caja caja, char simbolo) {
+        super(caja.getPosicion(), simbolo);
+        this.cajaEnvoltorio = caja;
+    }
+
+    @Override
+    public void setPosicion(Posicion posicion) {
+        super.setPosicion(posicion);
+        cajaEnvoltorio.setPosicion(posicion);
+    }
+
+    @Override
+    public boolean serEmpujada(Direccion dir, Matriz matriz, GameObject entidadA_Mover) {
+        return cajaEnvoltorio.serEmpujada(dir, matriz, entidadA_Mover);
+    }
+
+    public boolean contieneLlave() {
+        return cajaEnvoltorio.contieneLlave();
+    }
+}

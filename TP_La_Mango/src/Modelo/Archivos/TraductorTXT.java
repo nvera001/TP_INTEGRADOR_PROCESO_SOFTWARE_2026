@@ -28,7 +28,7 @@ public class TraductorTXT {
 
         diccionarioCadenas.put('#', cps);
         diccionarioCadenas.put('C', ccs);
-        diccionarioCadenas.put('P', cjugador);
+        diccionarioCadenas.put('P', posicion -> Jugador.inicializar(posicion));
         diccionarioCadenas.put('X', cmeta);
         diccionarioCadenas.put('S', posicion -> new TerrenoResbaladizo(posicion));
 

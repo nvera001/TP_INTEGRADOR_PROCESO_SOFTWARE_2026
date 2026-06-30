@@ -25,7 +25,7 @@ public class GestorJuego {
     };
     private int indiceNivelActual = 0;
     private Matriz matriz;
-    private Jugador jugador;
+
     private VentanaPrincipal ventana;
 
     private final LectorTXT lector;
@@ -103,13 +103,8 @@ public class GestorJuego {
 
         lector.cargarArchivo(rutasNiveles[indice]);
         String datos = lector.getCadena();
-        this.matriz = generador.generarMatrizDesdeString(datos);
-        this.jugador = matriz.obtenerJugador();
 
-        if (this.jugador == null) {
-            volverAlMenu();
-            return;
-        }
+        this.matriz = generador.generarMatrizDesdeString(datos);
 
         if (ventana != null) {
             ventana.mostrarPantallaJuego(this.matriz);
@@ -118,7 +113,9 @@ public class GestorJuego {
 
     public void intentarMover(Direccion dir) {
         if (estaDeslizando) return;
-        if (jugador == null || matriz == null) return;
+        if (matriz == null) return;
+
+        Jugador jugador = Jugador.getInstancia();
 
         Posicion viejaPosJugador = jugador.getPosicion();
         GameObject destino = matriz.obtenerObjetoEn(viejaPosJugador.sumar(dir.getDeltaX(), dir.getDeltaY()));

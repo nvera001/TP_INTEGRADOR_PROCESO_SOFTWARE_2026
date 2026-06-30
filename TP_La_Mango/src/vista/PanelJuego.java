@@ -84,17 +84,11 @@ public class PanelJuego extends JPanel {
                     switch (simbolo) {
                         case '@' -> claveImagen = "jugador";
                         case '#' -> claveImagen = "pared";
-                        case 'F' -> claveImagen = "caja_fragil";
-                        case 'Z' -> claveImagen = "caja_fragil_llave";
-                        case 'K' -> claveImagen = "caja_llave";
 
-                        case '$' -> {
-                            if (matriz.esMeta(posActual)) {
-                                claveImagen = "caja_meta";
-                            } else {
-                                claveImagen = "caja";
-                            }
-                        }
+                        case 'F' -> claveImagen = evaluarMeta("caja_fragil", "caja_meta", posActual, matriz);
+                        case 'Z' -> claveImagen = evaluarMeta("caja_fragil_llave", "caja_meta", posActual, matriz);
+                        case 'K' -> claveImagen = evaluarMeta("caja_llave", "caja_meta", posActual, matriz);
+                        case '$' -> claveImagen = evaluarMeta("caja", "caja_meta", posActual, matriz);
                     }
 
                     if (claveImagen != null) {
@@ -102,6 +96,13 @@ public class PanelJuego extends JPanel {
                     }
                 }
             }
+        }
+    }
+    private String evaluarMeta(String imagenNormal, String imagenMeta, Posicion posActual, Matriz matriz) {
+        if (matriz.esMeta(posActual)) {
+            return imagenMeta;
+        } else {
+            return imagenNormal;
         }
     }
 }

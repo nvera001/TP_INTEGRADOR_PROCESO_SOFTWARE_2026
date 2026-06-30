@@ -47,7 +47,7 @@ public class PanelMenu extends JPanel {
         gbc.gridy = 4;
         add(btnSalir, gbc);
 
-        JButton btnVolumen = new JButton(GestorAudio.isSonidoActivo() ? "🔊 SONIDO: ON" : "🔇 SONIDO: OFF");
+        JButton btnVolumen = new JButton(GestorAudio.isSonidoActivo() ? "SONIDO: ON" : "SONIDO: OFF");
         btnVolumen.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnVolumen.setForeground(Color.WHITE);
         btnVolumen.setBackground(GestorAudio.isSonidoActivo() ? new Color(52, 73, 94) : new Color(127, 140, 141));

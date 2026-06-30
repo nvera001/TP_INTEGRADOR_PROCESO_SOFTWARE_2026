@@ -14,6 +14,10 @@ public class VentanaPrincipal extends JFrame {
     private boolean juegoIniciado = false;
     private JLabel txtHUD;
 
+    private JButton btnUndo;
+
+    private boolean undoHabilitadoPorNivel = true;
+
     public VentanaPrincipal(GestorJuego gestor) {
         this.gestor = gestor;
         setTitle("Sokoban ");
@@ -40,6 +44,11 @@ public class VentanaPrincipal extends JFrame {
                     case KeyEvent.VK_RIGHT -> gestor.intentarMover(Direccion.DERECHA);
                     case KeyEvent.VK_R -> gestor.reiniciarNivel();
                     case KeyEvent.VK_M -> gestor.volverAlMenu();
+                    case KeyEvent.VK_Z -> {
+                        if (undoHabilitadoPorNivel) {
+                            gestor.deshacerCincoMovimientos();
+                        }
+                    }
                 }
             }
         });
@@ -81,6 +90,21 @@ public class VentanaPrincipal extends JFrame {
         });
         hudSuperior.add(btnVolumen);
 
+        btnUndo = new JButton("Deshacer [Z]");
+        btnUndo.setBackground(new Color(155, 89, 182)); // Color violeta/púrpura arcade
+        btnUndo.setForeground(Color.WHITE);
+        btnUndo.setFocusable(false); // Evita que se robe el foco de las flechas
+        btnUndo.setContentAreaFilled(true);
+        btnUndo.setOpaque(true);
+        btnUndo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnUndo.addActionListener(e -> {
+            if (undoHabilitadoPorNivel) {
+                gestor.deshacerCincoMovimientos();
+            }
+        });
+        hudSuperior.add(btnUndo);
+
         JButton btnReiniciar = new JButton("Reiniciar [R]");
         btnReiniciar.setBackground(new Color(230, 126, 34));
         btnReiniciar.setForeground(Color.WHITE);
@@ -106,6 +130,20 @@ public class VentanaPrincipal extends JFrame {
         revalidate();
         repaint();
         requestFocusInWindow();
+    }
+
+    public void setUndoVisible(boolean habilitado) {
+        this.undoHabilitadoPorNivel = habilitado;
+
+        if (btnUndo != null) {
+            if (habilitado) {
+                btnUndo.setBackground(new Color(155, 89, 182)); // Violeta vivo original
+                btnUndo.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Manito
+            } else {
+                btnUndo.setBackground(new Color(85, 75, 90)); // Gris oscuro violeta bien "muerto"
+                btnUndo.setCursor(new Cursor(Cursor.DEFAULT_CURSOR)); // Flecha normal
+            }
+        }
     }
 
     public void actualizarPantalla() {

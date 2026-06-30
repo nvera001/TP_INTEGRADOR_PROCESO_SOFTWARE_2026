@@ -12,6 +12,10 @@ import Vista.VentanaPrincipal;
 import Vista.GestorAudio;
 import Vista.DialogoVictoria;
 
+import Controlador.Comandos.Comando;
+import Controlador.Comandos.ComandoMovimiento;
+import java.util.Stack;
+
 public class GestorJuego {
 
     private final String[] rutasNiveles = {
@@ -33,6 +37,9 @@ public class GestorJuego {
 
     private int segundosTranscurridos = 0;
     private javax.swing.Timer timerReloj;
+
+    private final Stack<Comando> historial = new Stack<>();
+    private int usosUndoTotalNivel = 0;
 
     public GestorJuego() {
         this.lector = new LectorTXT();
@@ -64,6 +71,12 @@ public class GestorJuego {
         if (indice >= rutasNiveles.length) {
             volverAlMenu();
             return;
+        }
+
+        this.historial.clear();
+        this.usosUndoTotalNivel = 0;
+        if (ventana != null) {
+            ventana.setUndoVisible(true); // Se vuelve a mostrar al iniciar/reiniciar el nivel
         }
 
         this.movimientosNivel = 0;
@@ -100,21 +113,28 @@ public class GestorJuego {
     public void intentarMover(Direccion dir) {
         if (jugador == null || matriz == null) return;
 
+        Posicion viejaPosJugador = jugador.getPosicion();
+        GameObject destino = matriz.obtenerObjetoEn(viejaPosJugador.sumar(dir.getDeltaX(), dir.getDeltaY()));
+        Posicion viejaPosCaja = (destino instanceof Caja) ? destino.getPosicion() : null;
+
         Posicion posJugador = jugador.getPosicion();
         Posicion proxPosJugador = posJugador.sumar(dir.getDeltaX(), dir.getDeltaY());
-        GameObject destino = matriz.obtenerObjetoEn(proxPosJugador);
 
         boolean seMovio = false;
+        boolean seRompioCaja = false;
 
         if (destino == null) {
             matriz.moverObjeto(jugador, proxPosJugador);
             movimientosNivel++;
             seMovio = true;
             audio.reproducirSonido("paso.wav");
+
+            registrarComando(new ComandoMovimiento(jugador, viejaPosJugador, null, null, false));
         }
 
         else if (destino instanceof Caja) {
             Caja caja = (Caja) destino;
+            Posicion proxPosCaja = proxPosJugador.sumar(dir.getDeltaX(), dir.getDeltaY());
 
             if (caja.serEmpujada(dir, matriz, destino)) {
                 matriz.moverObjeto(jugador, proxPosJugador); // Mueve al jugador
@@ -122,6 +142,13 @@ public class GestorJuego {
                 empujesNivel++;
                 seMovio = true;
                 audio.reproducirSonido("empuje.wav");
+
+                if (matriz.obtenerObjetoEn(proxPosCaja) == null) {
+                    seRompioCaja = true;
+                }
+
+                // Guardamos comando de empuje
+                registrarComando(new ComandoMovimiento(jugador, viejaPosJugador, destino, viejaPosCaja, seRompioCaja));
             }
         }
 
@@ -136,7 +163,6 @@ public class GestorJuego {
             }
             audio.reproducirSonido("victoria.wav");
 
-            // Corregido: Usamos una clase anónima para pasar las dos acciones obligatorias
             DialogoVictoria cartelVictoria = new DialogoVictoria(
                     ventana,
                     getNivelActual(),
@@ -177,5 +203,54 @@ public class GestorJuego {
         int minutos = (segundosTranscurridos % 3600) / 60;
         int segundos = segundosTranscurridos % 60;
         return String.format("%d:%02d:%02d", horas, minutos, segundos);
+    }
+
+    private void registrarComando(Comando cmd) {
+        historial.push(cmd);
+        // Si nos pasamos del tope de la consigna (15), descartamos el movimiento más antiguo
+        if (historial.size() > 15) {
+            historial.remove(0);
+        }
+    }
+
+    public void deshacerCincoMovimientos() {
+        // Validación estricta: Si ya se usó 3 veces, el método se corta de inmediato
+        if (usosUndoTotalNivel >= 3) {
+            System.out.println("Límite de Deshacer alcanzado para este nivel.");
+            return;
+        }
+        if (historial.isEmpty()) {
+            System.out.println("No hay movimientos para deshacer.");
+            return;
+        }
+
+        // Sacamos hasta 5 comandos del historial
+        int pasosA_Deshacer = Math.min(5, historial.size());
+
+        for (int i = 0; i < pasosA_Deshacer; i++) {
+            Comando cmd = historial.pop();
+            cmd.deshacer(matriz);
+
+            // Restamos las estadísticas del HUD
+            movimientosNivel--;
+            if (cmd.esEmpuje()) {
+                empujesNivel--;
+            }
+        }
+
+        usosUndoTotalNivel++; // Registramos el uso (1, 2 o 3)
+        System.out.println("Undo ejecutado con éxito. Uso número: " + usosUndoTotalNivel);
+
+        // REGLA CLAVE: Si llegó al tercer uso, ocultamos el botón de inmediato
+        if (usosUndoTotalNivel >= 3 && ventana != null) {
+            ventana.setUndoVisible(false);
+            System.out.println("¡Botón de Deshacer agotado y ocultado!");
+        }
+
+        // Refrescamos los datos en pantalla
+        if (ventana != null) {
+            ventana.actualizarPantalla();
+            ventana.actualizarHUD();
+        }
     }
 }

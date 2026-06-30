@@ -28,4 +28,7 @@ public class CajaFragil extends CajaDecorador {
         }
         return seMovio;
     }
+    public void incrementarResistencia() {
+        this.resistencia++;
+    }
 }

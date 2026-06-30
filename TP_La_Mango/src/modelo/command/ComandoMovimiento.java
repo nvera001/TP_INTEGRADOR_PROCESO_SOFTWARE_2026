@@ -1,4 +1,4 @@
-package controlador.comandos;
+package modelo.command;
 
 import modelo.entidades.GameObject;
 import modelo.nucleo.Posicion;

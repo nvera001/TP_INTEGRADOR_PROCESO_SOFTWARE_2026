@@ -13,7 +13,7 @@ import vista.VentanaPrincipal;
 import vista.GestorAudio;
 import vista.DialogoVictoria;
 
-import controlador.comandos.ComandoMovimiento;
+import modelo.command.ComandoMovimiento;
 
 public class GestorJuego {
     private final String[] rutasNiveles = {

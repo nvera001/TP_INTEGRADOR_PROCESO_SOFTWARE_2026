@@ -1,4 +1,4 @@
-package controlador.comandos;
+package modelo.command;
 
 import modelo.nucleo.Matriz;
 

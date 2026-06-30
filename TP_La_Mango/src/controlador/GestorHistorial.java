@@ -1,6 +1,6 @@
 package controlador;
 
-import controlador.comandos.Comando;
+import modelo.command.Comando;
 import modelo.nucleo.Matriz;
 import java.util.Stack;
 

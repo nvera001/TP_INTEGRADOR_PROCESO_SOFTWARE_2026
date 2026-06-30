@@ -1,5 +1,8 @@
 package Modelo.Archivos;
 
+import Modelo.Decoradores.CajaFragil;
+import Modelo.Decoradores.CajaLlave;
+import Modelo.Entidades.CajaSimple;
 import Modelo.Entidades.*;
 import Modelo.Fabricas.*;
 import Modelo.Nucleo.Posicion;
@@ -15,17 +18,23 @@ public class TraductorTXT {
         diccionarioCadenas = new HashMap<>();
 
         diccionarioCadenas.put('#', new CreadorParedSimple());
-        diccionarioCadenas.put('C', new CreadorCajaSimple());
         diccionarioCadenas.put('P', new CreadorJugador());
         diccionarioCadenas.put('X', new CreadorMeta());
-
         diccionarioCadenas.put('S', new CreadorTerrenoResbaladizo());
         diccionarioCadenas.put('L', new CreadorCerrojo());
         diccionarioCadenas.put('M', new CreadorMuroCerrado());
 
+        diccionarioCadenas.put('C', new CreadorCajaSimple());
         diccionarioCadenas.put('F', new CreadorCajaFragil());
         diccionarioCadenas.put('K', new CreadorCajaLlave());
-        diccionarioCadenas.put('Z', new CreadorCajaFragilLlave());
+
+        diccionarioCadenas.put('Z', posicion -> {
+            Caja base = new CajaSimple(posicion);
+            Caja conLlave = new CajaLlave(base);
+            Caja conFragilidadYLlave = new CajaFragil(conLlave, 18, 'Z');
+
+            return (GameObject) conFragilidadYLlave;
+        });
     }
 
     public GameObject instanciarDesdeCaracter(char c, Posicion pos) {

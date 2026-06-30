@@ -6,6 +6,8 @@ import Modelo.Nucleo.Posicion;
 
 public class CreadorJugador implements CreadorGameObject{
     public GameObject crearGameObject(Posicion posicion) {
-        return Jugador.inicializar(posicion);
+        Jugador jugador = Jugador.getInstancia();
+        jugador.setPosicion(posicion);
+        return jugador;
     }
 }

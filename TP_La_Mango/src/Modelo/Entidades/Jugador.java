@@ -19,19 +19,4 @@ public class Jugador extends GameObject {
         }
         return instancia;
     }
-
-    /**
-     * Método explícito para el creador del mapa (TraductorTXT o GeneradorNivel).
-     * Se encarga de ubicar al jugador en su posición inicial al cargar un nivel.
-     */
-    public static Jugador inicializar(Posicion posicionInicial) {
-        if (instancia == null) {
-            instancia = new Jugador(posicionInicial);
-        } else {
-            instancia.setPosicion(posicionInicial);
-            // Aquí puedes aprovechar para resetear estadísticas del jugador si las tuviera:
-            // instancia.resetearMovimientos();
-        }
-        return instancia;
-    }
 }

@@ -58,7 +58,6 @@ public class PanelJuego extends JPanel {
         for (int y = 0; y < filas; y++) {
             for (int x = 0; x < columnas; x++) {
                 Posicion posActual = new Posicion(x, y);
-                GameObject obj = matriz.obtenerObjetoEn(posActual);
                 int px = offsetX + (x * tileSize);
                 int py = offsetY + (y * tileSize);
 
@@ -72,36 +71,29 @@ public class PanelJuego extends JPanel {
                     if (imgMeta != null) {
                         g.drawImage(imgMeta, px, py, tileSize, tileSize, null);
                     }
-                }
-
-                else if (matriz.esCerrojo(posActual)) {
+                } else if (matriz.esCerrojo(posActual)) {
                     Image imgCerrojo = cargador.getImagen("cerrojo");
                     if (imgCerrojo != null) {
                         g.drawImage(imgCerrojo, px, py, tileSize, tileSize, null);
                     }
                 }
 
+                if (matriz.esMuro(posActual) && !matriz.areMurosAbiertos()) {
+                    g.drawImage(cargador.getImagen("muro"), px, py, tileSize, tileSize, null);
+                }
+
+                GameObject obj = matriz.obtenerObjetoGrillaPura(posActual);
+
                 if (obj instanceof ParedSimple) {
                     g.drawImage(cargador.getImagen("pared"), px, py, tileSize, tileSize, null);
-                }
-                else if (obj instanceof Jugador) {
+                } else if (obj instanceof Jugador) {
                     g.drawImage(cargador.getImagen("jugador"), px, py, tileSize, tileSize, null);
-                }
-                else if (obj instanceof MuroCerrado) {
-                    if (!matriz.areMurosAbiertos()) {
-                        g.drawImage(cargador.getImagen("muro"), px, py, tileSize, tileSize, null);
-                    }
-                }
-                else if (obj instanceof Caja) {
+                } else if (obj instanceof Caja) {
                     char simbolo = obj.getSimbolo();
 
                     switch (simbolo) {
-                        case 'F' ->
-                                g.drawImage(cargador.getImagen("caja_fragil"), px, py, tileSize, tileSize, null);
-
-                        case 'K' ->
-                                g.drawImage(cargador.getImagen("caja_llave"), px, py, tileSize, tileSize, null);
-
+                        case 'F' -> g.drawImage(cargador.getImagen("caja_fragil"), px, py, tileSize, tileSize, null);
+                        case 'K' -> g.drawImage(cargador.getImagen("caja_llave"), px, py, tileSize, tileSize, null);
                         default -> {
                             if (matriz.esMeta(posActual)) {
                                 g.drawImage(cargador.getImagen("caja_meta"), px, py, tileSize, tileSize, null);

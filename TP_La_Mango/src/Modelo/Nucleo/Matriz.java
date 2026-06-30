@@ -18,6 +18,7 @@ public class Matriz {
     private final int columnas;
     private final List<Meta> metas;
     private final List<Cerrojo> cerrojos;
+    private final List<MuroCerrado> muros;
     private boolean murosAbiertos = false;
 
     public Matriz(int filas, int columnas) {
@@ -26,6 +27,7 @@ public class Matriz {
         this.grilla = new GameObject[filas][columnas];
         this.metas = new ArrayList<>();
         this.cerrojos = new ArrayList<>();
+        this.muros = new ArrayList<>();
     }
 
     public int getFilas() { return this.filas; }
@@ -36,6 +38,8 @@ public class Matriz {
             metas.add((Meta) obj);
         } else if (obj instanceof Cerrojo) {
             cerrojos.add((Cerrojo) obj);
+        } else if (obj instanceof MuroCerrado) {
+            muros.add((MuroCerrado) obj);
         } else {
             Posicion pos = obj.getPosicion();
             grilla[pos.getY()][pos.getX()] = obj;
@@ -47,13 +51,15 @@ public class Matriz {
             return null;
         }
 
-        GameObject obj = grilla[pos.getY()][pos.getX()];
-
-        if (obj instanceof MuroCerrado && murosAbiertos) {
-            return null;
+        if (!murosAbiertos && esMuro(pos)) {
+            GameObject objEnGrilla = grilla[pos.getY()][pos.getX()];
+            if (objEnGrilla != null) {
+                return objEnGrilla;
+            }
+            return obtenerMuroEn(pos);
         }
 
-        return obj;
+        return grilla[pos.getY()][pos.getX()];
     }
 
     public void moverObjeto(GameObject obj, Posicion nuevaPos) {
@@ -81,6 +87,20 @@ public class Matriz {
             }
         }
         return false;
+    }
+
+    public boolean esMuro(Posicion pos) {
+        for (MuroCerrado muro : muros) {
+            if (muro.getPosicion().equals(pos)) return true;
+        }
+        return false;
+    }
+
+    private MuroCerrado obtenerMuroEn(Posicion pos) {
+        for (MuroCerrado muro : muros) {
+            if (muro.getPosicion().equals(pos)) return muro;
+        }
+        return null;
     }
 
     public boolean areMurosAbiertos() {
@@ -131,12 +151,11 @@ public class Matriz {
         }
     }
 
-    public boolean esCasilleroCerrojo(Posicion pos) {
-        return false;
-    }
-
     public void abrirMurosCorrespondientes() {
         System.out.println("¡Muros abiertos por la Caja Llave!");
     }
 
+    public GameObject obtenerObjetoGrillaPura(Posicion pos) {
+        return grilla[pos.getY()][pos.getX()];
+    }
 }

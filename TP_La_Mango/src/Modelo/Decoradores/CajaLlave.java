@@ -16,7 +16,7 @@ public class CajaLlave extends CajaDecorador {
 
         if (seMovio) {
             Posicion nuevaPos = entidadA_Mover.getPosicion();
-            if (matriz.esCasilleroCerrojo(nuevaPos)) {
+            if (matriz.esCerrojo(nuevaPos)) {
                 matriz.abrirMurosCorrespondientes();
             }
         }

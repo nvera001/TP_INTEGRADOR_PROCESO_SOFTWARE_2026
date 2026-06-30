@@ -1,6 +1,6 @@
 package Modelo.Archivos;
 
-import Modelo.Decoradores.CajaSimple;
+import Modelo.Entidades.CajaSimple;
 import Modelo.Entidades.*;
 import Modelo.Decoradores.CajaFragil;
 import Modelo.Decoradores.CajaLlave;
@@ -51,6 +51,16 @@ public class TraductorTXT {
             }
         });
 
+        diccionarioCadenas.put('Z', new CreadorGameObject() {
+            @Override
+            public GameObject crearGameObject(Posicion posicion) {
+                CajaSimple base = new CajaSimple(posicion);
+                CajaLlave conLlave = new CajaLlave(base);
+                CajaFragil conFragilidadYLlave = new CajaFragil(conLlave, 18, 'Z');
+
+                return conFragilidadYLlave;
+            }
+        });
 
     }
 

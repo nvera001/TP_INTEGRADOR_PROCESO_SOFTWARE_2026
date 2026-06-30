@@ -107,7 +107,7 @@ public class Matriz {
         for (Cerrojo cerrojo : cerrojos) {
             GameObject objEncima = grilla[cerrojo.getPosicion().getY()][cerrojo.getPosicion().getX()];
 
-            if (objEncima != null && objEncima.getSimbolo() == 'K') {
+            if (objEncima instanceof Caja && ((Caja) objEncima).contieneLlave()) {
                 this.murosAbiertos = true;
                 return;
             }
@@ -137,7 +137,6 @@ public class Matriz {
                 }
             }
         }
-        System.out.println("ADVERTENCIA: No se encontró ningún jugador en el mapa.");
         return null;
     }
 
@@ -145,10 +144,6 @@ public class Matriz {
         if (pos.getX() >= 0 && pos.getX() < columnas && pos.getY() >= 0 && pos.getY() < filas) {
             grilla[pos.getY()][pos.getX()] = null;
         }
-    }
-
-    public void abrirMurosCorrespondientes() {
-        System.out.println("¡Muros abiertos por la Caja Llave!");
     }
 
     public GameObject obtenerObjetoGrillaPura(Posicion pos) {

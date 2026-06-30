@@ -7,9 +7,9 @@ import Modelo.Nucleo.Direccion;
 import Modelo.Nucleo.Matriz;
 
 public abstract class CajaDecorador extends GameObject implements Caja {
-    protected GameObject cajaEnvoltorio;
+    protected Caja cajaEnvoltorio;
 
-    public CajaDecorador(GameObject caja, char simbolo) {
+    public CajaDecorador(Caja caja, char simbolo) {
         super(caja.getPosicion(), simbolo);
         this.cajaEnvoltorio = caja;
     }
@@ -22,9 +22,10 @@ public abstract class CajaDecorador extends GameObject implements Caja {
 
     @Override
     public boolean serEmpujada(Direccion dir, Matriz matriz, GameObject entidadA_Mover) {
-        if (cajaEnvoltorio instanceof Caja) {
-            return ((Caja) cajaEnvoltorio).serEmpujada(dir, matriz, entidadA_Mover);
-        }
-        return false;
+        return cajaEnvoltorio.serEmpujada(dir, matriz, entidadA_Mover);
+    }
+
+    public boolean contieneLlave() {
+        return cajaEnvoltorio.contieneLlave();
     }
 }

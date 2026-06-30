@@ -98,6 +98,7 @@ public class PanelJuego extends JPanel {
 
                     switch (simbolo) {
                         case 'F' -> g.drawImage(cargador.getImagen("caja_fragil"), px, py, tileSize, tileSize, null);
+                        case 'Z' -> g.drawImage(cargador.getImagen("caja_fragil_llave"), px, py, tileSize, tileSize, null);
                         case 'K' -> g.drawImage(cargador.getImagen("caja_llave"), px, py, tileSize, tileSize, null);
                         default -> {
                             if (matriz.esMeta(posActual)) {

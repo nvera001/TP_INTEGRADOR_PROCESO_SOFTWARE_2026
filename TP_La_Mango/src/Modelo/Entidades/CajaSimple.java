@@ -1,7 +1,5 @@
-package Modelo.Decoradores;
+package Modelo.Entidades;
 
-import Modelo.Entidades.Caja;
-import Modelo.Entidades.GameObject;
 import Modelo.Nucleo.Posicion;
 import Modelo.Nucleo.Direccion;
 import Modelo.Nucleo.Matriz;
@@ -11,7 +9,6 @@ public class CajaSimple extends GameObject implements Caja {
         super(posicion, '$');
     }
 
-
     public boolean serEmpujada(Direccion dir, Matriz matriz, GameObject entidadA_Mover) {
         Posicion proxPosCaja = entidadA_Mover.getPosicion().sumar(dir.getDeltaX(), dir.getDeltaY());
         GameObject destinoDeCaja = matriz.obtenerObjetoEn(proxPosCaja);
@@ -20,6 +17,10 @@ public class CajaSimple extends GameObject implements Caja {
             matriz.moverObjeto(entidadA_Mover, proxPosCaja);
             return true;
         }
+        return false;
+    }
+
+    public boolean contieneLlave() {
         return false;
     }
 }

@@ -226,11 +226,9 @@ public class GestorJuego {
 
     public void deshacerCincoMovimientos() {
         if (usosUndoTotalNivel >= 3) {
-            System.out.println("Límite de Deshacer alcanzado para este nivel.");
             return;
         }
         if (historial.isEmpty()) {
-            System.out.println("No hay movimientos para deshacer.");
             return;
         }
 

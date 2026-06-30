@@ -2,7 +2,7 @@ package Controlador;
 
 import Modelo.Archivos.LectorTXT;
 import Modelo.Entidades.Caja;
-import Modelo.Fabricas.GeneradorNivel;
+import Modelo.Builder.GeneradorNivel;
 import Modelo.Nucleo.Matriz;
 import Modelo.Nucleo.Posicion;
 import Modelo.Nucleo.Direccion;

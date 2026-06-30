@@ -9,7 +9,6 @@ public enum Direccion {
     private final int deltaX;
     private final int deltaY;
 
-    // Constructor interno del enum
     Direccion(int deltaX, int deltaY) {
         this.deltaX = deltaX;
         this.deltaY = deltaY;

@@ -46,11 +46,11 @@ public class DialogoVictoria extends JDialog {
         if (nivel != 3) {
             panel.setBackground(new Color(25, 25, 25));
         }
-        panel.setBorder(BorderFactory.createLineBorder(new Color(243, 156, 18), 3)); // Borde naranja
+        panel.setBorder(BorderFactory.createLineBorder(new Color(243, 156, 18), 3));
 
         JLabel txtTitulo = new JLabel(nivel == 3 ? "¡JUEGO COMPLETADO!" : "¡NIVEL COMPLETADO!", SwingConstants.CENTER);
         txtTitulo.setFont(new Font("Impact", Font.PLAIN, 36));
-        txtTitulo.setForeground(new Color(46, 204, 113)); // Verde victoria
+        txtTitulo.setForeground(new Color(46, 204, 113));
         txtTitulo.setBorder(BorderFactory.createEmptyBorder(25, 10, 10, 10));
         panel.add(txtTitulo, BorderLayout.NORTH);
 
@@ -83,7 +83,7 @@ public class DialogoVictoria extends JDialog {
             JButton btnMenu = new JButton("VOLVER AL MENÚ");
             btnMenu.setFont(new Font("Segoe UI", Font.BOLD, 13));
             btnMenu.setForeground(Color.WHITE);
-            btnMenu.setBackground(new Color(52, 152, 219)); // Azul
+            btnMenu.setBackground(new Color(52, 152, 219));
             btnMenu.setFocusPainted(false);
             btnMenu.setBorder(BorderFactory.createEmptyBorder(12, 10, 12, 10));
             btnMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -95,7 +95,7 @@ public class DialogoVictoria extends JDialog {
             JButton btnSalir = new JButton("SALIR DEL JUEGO");
             btnSalir.setFont(new Font("Segoe UI", Font.BOLD, 13));
             btnSalir.setForeground(Color.WHITE);
-            btnSalir.setBackground(new Color(231, 76, 60)); // Rojo
+            btnSalir.setBackground(new Color(231, 76, 60));
             btnSalir.setFocusPainted(false);
             btnSalir.setBorder(BorderFactory.createEmptyBorder(12, 10, 12, 10));
             btnSalir.setCursor(new Cursor(Cursor.HAND_CURSOR));

@@ -87,7 +87,6 @@ public class PanelJuego extends JPanel {
                 else if (obj instanceof Jugador) {
                     g.drawImage(cargador.getImagen("jugador"), px, py, tileSize, tileSize, null);
                 }
-                // --- 3. NUEVO: EL MURO CERRADO VA ACÁ (Solo se dibuja si están bloqueados) ---
                 else if (obj instanceof MuroCerrado) {
                     if (!matriz.areMurosAbiertos()) {
                         g.drawImage(cargador.getImagen("muro"), px, py, tileSize, tileSize, null);

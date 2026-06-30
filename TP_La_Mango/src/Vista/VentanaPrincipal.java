@@ -86,14 +86,13 @@ public class VentanaPrincipal extends JFrame {
         btnVolumen.setForeground(Color.WHITE);
         btnVolumen.setFocusable(false);
 
-        // Ahora el clic del mouse hace exactamente lo mismo que la tecla S
         btnVolumen.addActionListener(e -> alternarSonido());
         hudSuperior.add(btnVolumen);
 
         btnUndo = new JButton("Deshacer [Z]");
-        btnUndo.setBackground(new Color(155, 89, 182)); // Color violeta/púrpura arcade
+        btnUndo.setBackground(new Color(155, 89, 182));
         btnUndo.setForeground(Color.WHITE);
-        btnUndo.setFocusable(false); // Evita que se robe el foco de las flechas
+        btnUndo.setFocusable(false);
         btnUndo.setContentAreaFilled(true);
         btnUndo.setOpaque(true);
         btnUndo.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -137,11 +136,11 @@ public class VentanaPrincipal extends JFrame {
 
         if (btnUndo != null) {
             if (habilitado) {
-                btnUndo.setBackground(new Color(155, 89, 182)); // Violeta vivo original
-                btnUndo.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Manito
+                btnUndo.setBackground(new Color(155, 89, 182));
+                btnUndo.setCursor(new Cursor(Cursor.HAND_CURSOR));
             } else {
-                btnUndo.setBackground(new Color(85, 75, 90)); // Gris oscuro violeta bien "muerto"
-                btnUndo.setCursor(new Cursor(Cursor.DEFAULT_CURSOR)); // Flecha normal
+                btnUndo.setBackground(new Color(85, 75, 90));
+                btnUndo.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
         }
     }
@@ -165,7 +164,6 @@ public class VentanaPrincipal extends JFrame {
         GestorAudio.toggleSonido();
 
         if (btnVolumen != null) {
-            // Le agregamos el [S] a las dos opciones de texto
             btnVolumen.setText(GestorAudio.isSonidoActivo() ? "Sonido: ON [S]" : "Sonido: OFF [S]");
             btnVolumen.setBackground(GestorAudio.isSonidoActivo() ? new Color(52, 73, 94) : new Color(127, 140, 141));
         }

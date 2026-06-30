@@ -45,7 +45,6 @@ public class TraductorTXT {
             }
         });
 
-        // Caja llave.
         diccionarioCadenas.put('K', new CreadorGameObject() {
             @Override
             public GameObject crearGameObject(Posicion posicion) {

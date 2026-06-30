@@ -10,12 +10,12 @@ public class PanelMenu extends JPanel {
     }
     private final CargadorRecursos cargador = new CargadorRecursos();
     public PanelMenu(AccionMenu accion) {
-        this.setBackground(new Color(30, 30, 30)); // Fondo gris oscuro elegante
-        this.setLayout(new GridBagLayout()); // Centra todo en el medio de la pantalla
+        this.setBackground(new Color(30, 30, 30));
+        this.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.insets = new Insets(15, 15, 15, 15); // Espaciado entre botones
+        gbc.insets = new Insets(15, 15, 15, 15);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         Font fuenteTitulo = new Font("Impact", Font.PLAIN, 72);
@@ -24,7 +24,7 @@ public class PanelMenu extends JPanel {
 
         JLabel txtTitulo = new JLabel("SOKOBAN", SwingConstants.CENTER);
         txtTitulo.setFont(fuenteTitulo);
-        txtTitulo.setForeground(new Color(243, 156, 18)); // Naranja Gaming
+        txtTitulo.setForeground(new Color(243, 156, 18));
         gbc.gridy = 0;
         add(txtTitulo, gbc);
 

@@ -46,7 +46,7 @@ public class GestorJuego {
     public GestorJuego() {
         this.lector = new LectorTXT();
         this.generador = new GeneradorNivel();
-        this.audio = new GestorAudio(); // Inicializamos el audio
+        this.audio = new GestorAudio();
     }
 
     public void setVentana(VentanaPrincipal ventana) {
@@ -80,7 +80,7 @@ public class GestorJuego {
         this.historial.clear();
         this.usosUndoTotalNivel = 0;
         if (ventana != null) {
-            ventana.setUndoVisible(true); // Se vuelve a mostrar al iniciar/reiniciar el nivel
+            ventana.setUndoVisible(true);
         }
 
         this.movimientosNivel = 0;
@@ -141,7 +141,7 @@ public class GestorJuego {
             Posicion proxPosCaja = proxPosJugador.sumar(dir.getDeltaX(), dir.getDeltaY());
 
             if (caja.serEmpujada(dir, matriz, destino)) {
-                matriz.moverObjeto(jugador, proxPosJugador); // Mueve al jugador
+                matriz.moverObjeto(jugador, proxPosJugador);
                 movimientosNivel++;
                 empujesNivel++;
                 seMovio = true;
@@ -151,7 +151,6 @@ public class GestorJuego {
                     seRompioCaja = true;
                 }
 
-                // Guardamos comando de empuje
                 registrarComando(new ComandoMovimiento(jugador, viejaPosJugador, destino, viejaPosCaja, seRompioCaja));
             }
         }
@@ -172,8 +171,8 @@ public class GestorJuego {
                     getNivelActual(),
                     movimientosNivel,
                     empujesNivel,
-                    this.cantUndoNivel,    // NUEVO: Cantidad de undos
-                    calcularPuntaje(),     // NUEVO: Puntaje calculado
+                    this.cantUndoNivel,
+                    calcularPuntaje(),
                     getTiempoFormateado(),
                     new DialogoVictoria.AccionVictoria() {
                         @Override
@@ -213,14 +212,12 @@ public class GestorJuego {
 
     private void registrarComando(Comando cmd) {
         historial.push(cmd);
-        // Si nos pasamos del tope de la consigna (15), descartamos el movimiento más antiguo
         if (historial.size() > 15) {
             historial.remove(0);
         }
     }
 
     public void deshacerCincoMovimientos() {
-        // Validación estricta: Si ya se usó 3 veces, el método se corta de inmediato
         if (usosUndoTotalNivel >= 3) {
             System.out.println("Límite de Deshacer alcanzado para este nivel.");
             return;
@@ -230,31 +227,27 @@ public class GestorJuego {
             return;
         }
 
-        // Sacamos hasta 5 comandos del historial
         int pasosA_Deshacer = Math.min(5, historial.size());
 
         for (int i = 0; i < pasosA_Deshacer; i++) {
             Comando cmd = historial.pop();
             cmd.deshacer(matriz);
 
-            // Restamos las estadísticas del HUD
             movimientosNivel--;
             if (cmd.esEmpuje()) {
                 empujesNivel--;
             }
         }
 
-        usosUndoTotalNivel++; // Registramos el uso (1, 2 o 3)
+        usosUndoTotalNivel++;
         this.cantUndoNivel++;
         System.out.println("Undo ejecutado con éxito. Uso número: " + usosUndoTotalNivel);
 
-        // REGLA CLAVE: Si llegó al tercer uso, ocultamos el botón de inmediato
         if (usosUndoTotalNivel >= 3 && ventana != null) {
             ventana.setUndoVisible(false);
             System.out.println("¡Botón de Deshacer agotado y ocultado!");
         }
 
-        // Refrescamos los datos en pantalla
         if (ventana != null) {
             ventana.actualizarPantalla();
             ventana.actualizarHUD();
@@ -263,7 +256,6 @@ public class GestorJuego {
     public int calcularPuntaje() {
         int base = 5000;
         int penalizacion = (movimientosNivel * 10) + (empujesNivel * 20) + (cantUndoNivel * 100);
-        // Retorna el cálculo, asegurando un piso mínimo de 100 puntos
         return Math.max(100, base - penalizacion);
     }
 

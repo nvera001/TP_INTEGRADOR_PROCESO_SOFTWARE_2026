@@ -17,7 +17,7 @@ public abstract class CajaDecorador extends GameObject implements Caja {
     @Override
     public void setPosicion(Posicion posicion) {
         super.setPosicion(posicion);
-        cajaEnvoltorio.setPosicion(posicion); // Mantiene sincronizada la caja de adentro
+        cajaEnvoltorio.setPosicion(posicion);
     }
 
     @Override

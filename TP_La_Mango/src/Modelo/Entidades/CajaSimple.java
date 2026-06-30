@@ -6,7 +6,7 @@ import Modelo.Nucleo.Matriz;
 
 public class CajaSimple extends GameObject implements Caja {
     public CajaSimple(Posicion posicion) {
-        super(posicion, '$'); // '$' representa la caja
+        super(posicion, '$');
     }
 
 

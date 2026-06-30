@@ -21,7 +21,6 @@ public class CajaFragil extends CajaDecorador {
             System.out.println("Caja frágil empujada. Resistencia restante: " + resistencia);
 
             if (this.resistencia <= 0) {
-                // Borra el bloque entero de la pantalla
                 matriz.eliminarObjeto(entidadA_Mover.getPosicion());
                 System.out.println("¡La caja frágil se rompió!");
             }

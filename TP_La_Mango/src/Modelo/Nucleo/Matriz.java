@@ -103,15 +103,13 @@ public class Matriz {
         if (metas.isEmpty()) return false;
 
         for (Meta meta : metas) {
-            // Buscamos qué objeto hay en la grilla exactamente en la posición de esta meta
             GameObject objEnFrente = obtenerObjetoEn(meta.getPosicion());
 
-            // Si en esa posición NO hay una caja, significa que todavía no ganaste
             if (!(objEnFrente instanceof Caja)) {
                 return false;
             }
         }
-        return true; // Si recorrió todas las metas y en todas había una caja, ¡GANASTE!
+        return true;
     }
 
     public Jugador obtenerJugador() {
@@ -134,7 +132,7 @@ public class Matriz {
     }
 
     public boolean esCasilleroCerrojo(Posicion pos) {
-        return false; // Se completará al implementar los terrenos especiales
+        return false;
     }
 
     public void abrirMurosCorrespondientes() {

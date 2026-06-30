@@ -1,5 +1,7 @@
-package Modelo.Entidades;
+package Modelo.Decoradores;
 
+import Modelo.Entidades.Caja;
+import Modelo.Entidades.GameObject;
 import Modelo.Nucleo.Posicion;
 import Modelo.Nucleo.Direccion;
 import Modelo.Nucleo.Matriz;

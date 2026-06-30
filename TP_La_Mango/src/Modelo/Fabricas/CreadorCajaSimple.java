@@ -1,6 +1,6 @@
 package Modelo.Fabricas;
 
-import Modelo.Entidades.CajaSimple;
+import Modelo.Decoradores.CajaSimple;
 import Modelo.Entidades.GameObject;
 import Modelo.Nucleo.Posicion;
 

@@ -1,5 +1,6 @@
 package Modelo.Archivos;
 
+import Modelo.Decoradores.CajaSimple;
 import Modelo.Entidades.*;
 import Modelo.Decoradores.CajaFragil;
 import Modelo.Decoradores.CajaLlave;

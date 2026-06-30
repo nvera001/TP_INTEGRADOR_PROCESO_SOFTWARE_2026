@@ -283,7 +283,7 @@ public class GestorJuego {
                     }
                 } else {
                     timerGelo.stop();
-                    estaDeslizando = false; // Desbloquea el teclado
+                    estaDeslizando = false;
                 }
             } else {
                 timerGelo.stop();

@@ -3,15 +3,17 @@ package Modelo.Entidades;
 import Modelo.Nucleo.Posicion;
 
 public class Jugador extends GameObject {
-    private Jugador instancia;
+    private static Jugador instancia;
 
-    public Jugador (Posicion pos){
-        super (pos,'@');
+    private Jugador(Posicion pos){
+        super(pos, '@');
     }
 
-    public Jugador getInstancia(Posicion posicion) {
-        if  (instancia == null) {
-            instancia = new Jugador (posicion);
+    public static Jugador getInstancia(Posicion posicion) {
+        if (instancia == null) {
+            instancia = new Jugador(posicion);
+        } else {
+            instancia.setPosicion(posicion);
         }
         return instancia;
     }

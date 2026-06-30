@@ -8,47 +8,41 @@ import modelo.nucleo.Posicion;
 import modelo.nucleo.Direccion;
 import modelo.entidades.GameObject;
 import modelo.entidades.Jugador;
+
 import vista.VentanaPrincipal;
 import vista.GestorAudio;
 import vista.DialogoVictoria;
 
-import controlador.comandos.Comando;
 import controlador.comandos.ComandoMovimiento;
-import java.util.Stack;
 
 public class GestorJuego {
-
     private final String[] rutasNiveles = {
             "/modelo/mapas/mapa.txt",
             "/modelo/mapas/mapa2.txt",
             "/modelo/mapas/mapa3.txt"
     };
+
+    private final GestorHistorial historialManager;
+    private final ContadorEstadisticas estadisticas;
+
     private int indiceNivelActual = 0;
     private Matriz matriz;
-
     private VentanaPrincipal ventana;
 
     private final LectorTXT lector;
     private final GeneradorNivel generador;
-
-    private int movimientosNivel = 0;
-    private int empujesNivel = 0;
     private final GestorAudio audio;
 
-    private int segundosTranscurridos = 0;
     private javax.swing.Timer timerReloj;
-
-    private final Stack<Comando> historial = new Stack<>();
-    private int usosUndoTotalNivel = 0;
-
-    private int cantUndoNivel = 0;
-
     private boolean estaDeslizando = false;
 
     public GestorJuego() {
         this.lector = new LectorTXT();
         this.generador = new GeneradorNivel();
         this.audio = new GestorAudio();
+
+        this.historialManager = new GestorHistorial();
+        this.estadisticas = new ContadorEstadisticas();
     }
 
     public void setVentana(VentanaPrincipal ventana) {
@@ -72,29 +66,20 @@ public class GestorJuego {
     }
 
     private void cargarNivel(int indice) {
-        this.cantUndoNivel = 0;
-
         if (indice >= rutasNiveles.length) {
             volverAlMenu();
             return;
         }
 
-        this.historial.clear();
-        this.usosUndoTotalNivel = 0;
-        if (ventana != null) {
-            ventana.setUndoVisible(true);
-        }
+        this.historialManager.reset();
+        this.estadisticas.reset();
 
-        this.movimientosNivel = 0;
-        this.empujesNivel = 0;
+        if (ventana != null) {ventana.setUndoVisible(true);}
 
-        this.segundosTranscurridos = 0;
-        if (timerReloj != null) {
-            timerReloj.stop();
-        }
+        if (timerReloj != null) {timerReloj.stop();}
 
         timerReloj = new javax.swing.Timer(1000, e -> {
-            segundosTranscurridos++;
+            estadisticas.incrementarSegundo();
             if (ventana != null) {
                 ventana.actualizarHUD();
             }
@@ -106,9 +91,7 @@ public class GestorJuego {
 
         this.matriz = generador.generarMatrizDesdeString(datos);
 
-        if (ventana != null) {
-            ventana.mostrarPantallaJuego(this.matriz);
-        }
+        if (ventana != null) {ventana.mostrarPantallaJuego(this.matriz);}
     }
 
     public void intentarMover(Direccion dir) {
@@ -129,11 +112,11 @@ public class GestorJuego {
 
         if (destino == null) {
             matriz.moverObjeto(jugador, proxPosJugador);
-            movimientosNivel++;
+            estadisticas.registrarMovimiento();
             seMovio = true;
             audio.reproducirSonido("paso.wav");
 
-            registrarComando(new ComandoMovimiento(jugador, viejaPosJugador, null, null, false));
+            historialManager.registrarComando(new ComandoMovimiento(jugador, viejaPosJugador, null, null, false));
         }
 
         else if (destino instanceof Caja) {
@@ -142,20 +125,16 @@ public class GestorJuego {
 
             if (caja.serEmpujada(dir, matriz, destino)) {
                 matriz.moverObjeto(jugador, proxPosJugador);
-                movimientosNivel++;
-                empujesNivel++;
+                estadisticas.registrarMovimiento();
+                estadisticas.registrarEmpuje();
                 seMovio = true;
                 audio.reproducirSonido("empuje.wav");
 
-                if (matriz.obtenerObjetoEn(proxPosCaja) == null) {
-                    seRompioCaja = true;
-                }
+                if (matriz.obtenerObjetoEn(proxPosCaja) == null) {seRompioCaja = true;}
 
-                registrarComando(new ComandoMovimiento(jugador, viejaPosJugador, destino, viejaPosCaja, seRompioCaja));
+                historialManager.registrarComando(new ComandoMovimiento(jugador, viejaPosJugador, destino, viejaPosCaja, seRompioCaja));
 
-                if (matriz.esResbaladizo(destino.getPosicion())) {
-                    ejecutarDeslizamientoAnimado(destino, dir);
-                }
+                if (matriz.esResbaladizo(destino.getPosicion())) {ejecutarDeslizamientoAnimado(destino, dir);}
             }
         }
 
@@ -173,9 +152,9 @@ public class GestorJuego {
             DialogoVictoria cartelVictoria = new DialogoVictoria(
                     ventana,
                     getNivelActual(),
-                    movimientosNivel,
-                    empujesNivel,
-                    this.cantUndoNivel,
+                    estadisticas.getMovimientos(),
+                    estadisticas.getEmpujes(),
+                    historialManager.getCantUndoNivel(),
                     calcularPuntaje(),
                     getTiempoFormateado(),
                     new DialogoVictoria.AccionVictoria() {
@@ -195,57 +174,16 @@ public class GestorJuego {
         }
     }
 
-    public int getNivelActual() {
-        return indiceNivelActual + 1;
-    }
-
-    public int getMovimientos() {
-        return movimientosNivel;
-    }
-
-    public int getEmpujes() {
-        return empujesNivel;
-    }
-
-    public String getTiempoFormateado() {
-        int horas = segundosTranscurridos / 3600;
-        int minutos = (segundosTranscurridos % 3600) / 60;
-        int segundos = segundosTranscurridos % 60;
-        return String.format("%d:%02d:%02d", horas, minutos, segundos);
-    }
-
-    private void registrarComando(Comando cmd) {
-        historial.push(cmd);
-        if (historial.size() > 15) {
-            historial.remove(0);
-        }
-    }
-
     public void deshacerCincoMovimientos() {
-        if (usosUndoTotalNivel >= 3) {
-            return;
-        }
-        if (historial.isEmpty()) {
+        if (!historialManager.puedeDeshacer()) {
             return;
         }
 
-        int pasosA_Deshacer = Math.min(5, historial.size());
+        historialManager.deshacerBloque(matriz, estadisticas);
 
-        for (int i = 0; i < pasosA_Deshacer; i++) {
-            Comando cmd = historial.pop();
-            cmd.deshacer(matriz);
+        System.out.println("Undo ejecutado con éxito. Uso número: " + historialManager.getUsosUndoTotal());
 
-            movimientosNivel--;
-            if (cmd.esEmpuje()) {
-                empujesNivel--;
-            }
-        }
-
-        usosUndoTotalNivel++;
-        this.cantUndoNivel++;
-        System.out.println("Undo ejecutado con éxito. Uso número: " + usosUndoTotalNivel);
-
-        if (usosUndoTotalNivel >= 3 && ventana != null) {
+        if (historialManager.getUsosUndoTotal() >= 3 && ventana != null) {
             ventana.setUndoVisible(false);
             System.out.println("¡Botón de Deshacer agotado y ocultado!");
         }
@@ -255,10 +193,25 @@ public class GestorJuego {
             ventana.actualizarHUD();
         }
     }
+
+    public int getNivelActual() {
+        return indiceNivelActual + 1;
+    }
+
+    public int getMovimientos() {
+        return estadisticas.getMovimientos();
+    }
+
+    public int getEmpujes() {
+        return estadisticas.getEmpujes();
+    }
+
+    public String getTiempoFormateado() {
+        return estadisticas.getTiempoFormateado();
+    }
+
     public int calcularPuntaje() {
-        int base = 5000;
-        int penalizacion = (movimientosNivel * 10) + (empujesNivel * 20) + (cantUndoNivel * 100);
-        return Math.max(100, base - penalizacion);
+        return estadisticas.calcularPuntaje(historialManager.getCantUndoNivel());
     }
 
     private void ejecutarDeslizamientoAnimado(GameObject caja, Direccion dir) {
@@ -287,5 +240,4 @@ public class GestorJuego {
         });
         timerGelo.start();
     }
-
 }

@@ -1,10 +1,10 @@
 package modelo.archivos;
 
-import modelo.decoradores.CajaFragil;
-import modelo.decoradores.CajaLlave;
+import modelo.decorator.CajaFragil;
+import modelo.decorator.CajaLlave;
 import modelo.entidades.CajaSimple;
 import modelo.entidades.*;
-import modelo.fabricas.*;
+import modelo.factory_method.*;
 import modelo.nucleo.Posicion;
 
 import java.util.HashMap;

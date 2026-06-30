@@ -1,6 +1,6 @@
-package modelo.fabricas;
+package modelo.factory_method;
 
-import modelo.decoradores.CajaFragil;
+import modelo.decorator.CajaFragil;
 import modelo.entidades.CajaSimple;
 import modelo.entidades.GameObject;
 import modelo.nucleo.Posicion;

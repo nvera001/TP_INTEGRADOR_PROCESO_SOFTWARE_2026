@@ -3,7 +3,7 @@ package modelo.command;
 import modelo.entidades.GameObject;
 import modelo.nucleo.Posicion;
 import modelo.nucleo.Matriz;
-import modelo.decoradores.CajaFragil;
+import modelo.decorator.CajaFragil;
 
 public class ComandoMovimiento implements Comando {
     private final GameObject jugador;

@@ -1,4 +1,4 @@
-package modelo.fabricas;
+package modelo.factory_method;
 
 import modelo.entidades.GameObject;
 import modelo.entidades.MuroCerrado;

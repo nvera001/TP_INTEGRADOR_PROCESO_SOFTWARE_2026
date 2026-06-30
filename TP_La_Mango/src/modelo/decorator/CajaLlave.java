@@ -1,4 +1,4 @@
-package modelo.decoradores;
+package modelo.decorator;
 
 import modelo.entidades.Caja;
 

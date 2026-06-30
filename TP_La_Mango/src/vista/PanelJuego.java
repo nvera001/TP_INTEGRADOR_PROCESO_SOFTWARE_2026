@@ -1,10 +1,7 @@
 package vista;
 
 import modelo.entidades.GameObject;
-import modelo.entidades.Jugador;
-import modelo.entidades.ParedSimple;
 import modelo.nucleo.Matriz;
-import modelo.entidades.Caja;
 import modelo.nucleo.Posicion;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -60,52 +57,49 @@ public class PanelJuego extends JPanel {
                 int px = offsetX + (x * tileSize);
                 int py = offsetY + (y * tileSize);
 
+                // 1. Siempre se dibuja el piso base
                 Image imgPiso = cargador.getImagen("piso");
                 if (imgPiso != null) {
                     g.drawImage(imgPiso, px, py, tileSize, tileSize, null);
                 }
 
+                // 2. Capa Estática de Suelo (Polimórfica)
                 if (matriz.esMeta(posActual)) {
-                    Image imgMeta = cargador.getImagen("meta");
-                    if (imgMeta != null) {
-                        g.drawImage(imgMeta, px, py, tileSize, tileSize, null);
-                    }
+                    g.drawImage(cargador.getImagen("meta"), px, py, tileSize, tileSize, null);
                 } else if (matriz.esCerrojo(posActual)) {
-                    Image imgCerrojo = cargador.getImagen("cerrojo");
-                    if (imgCerrojo != null) {
-                        g.drawImage(imgCerrojo, px, py, tileSize, tileSize, null);
-                    }
+                    g.drawImage(cargador.getImagen("cerrojo"), px, py, tileSize, tileSize, null);
                 } else if (matriz.esResbaladizo(posActual)) {
-                    Image imgResbaladizo = cargador.getImagen("resbaladizo");
-                    if (imgResbaladizo != null) {
-                        g.drawImage(imgResbaladizo, px, py, tileSize, tileSize, null);
-                    }
+                    g.drawImage(cargador.getImagen("resbaladizo"), px, py, tileSize, tileSize, null);
                 }
 
-                if (matriz.esMuro(posActual) && !matriz.MurosAbiertos()) {
-                    g.drawImage(cargador.getImagen("muro"), px, py, tileSize, tileSize, null);
-                }
-
+                // 3. Capa de Elementos Superiores (100% OCP sin instanceof)
                 GameObject obj = matriz.obtenerObjetoGrillaPura(posActual);
-
-                if (obj instanceof ParedSimple) {
-                    g.drawImage(cargador.getImagen("pared"), px, py, tileSize, tileSize, null);
-                } else if (obj instanceof Jugador) {
-                    g.drawImage(cargador.getImagen("jugador"), px, py, tileSize, tileSize, null);
-                } else if (obj instanceof Caja) {
+                if (obj != null) {
                     char simbolo = obj.getSimbolo();
+                    String claveImagen = null;
 
                     switch (simbolo) {
-                        case 'F' -> g.drawImage(cargador.getImagen("caja_fragil"), px, py, tileSize, tileSize, null);
-                        case 'Z' -> g.drawImage(cargador.getImagen("caja_fragil_llave"), px, py, tileSize, tileSize, null);
-                        case 'K' -> g.drawImage(cargador.getImagen("caja_llave"), px, py, tileSize, tileSize, null);
-                        default -> {
-                            if (matriz.esMeta(posActual)) {
-                                g.drawImage(cargador.getImagen("caja_meta"), px, py, tileSize, tileSize, null);
-                            } else {
-                                g.drawImage(cargador.getImagen("caja"), px, py, tileSize, tileSize, null);
+                        case '@' -> claveImagen = "jugador";
+                        case '#' -> claveImagen = "pared";
+                        case 'F' -> claveImagen = "caja_fragil";
+                        case 'Z' -> claveImagen = "caja_fragil_llave";
+                        case 'K' -> claveImagen = "caja_llave";
+                        case 'M' -> {
+                            if (!matriz.MurosAbiertos()) {
+                                claveImagen = "muro";
                             }
                         }
+                        case '$' -> {
+                            if (matriz.esMeta(posActual)) {
+                                claveImagen = "caja_meta";
+                            } else {
+                                claveImagen = "caja";
+                            }
+                        }
+                    }
+
+                    if (claveImagen != null) {
+                        g.drawImage(cargador.getImagen(claveImagen), px, py, tileSize, tileSize, null);
                     }
                 }
             }

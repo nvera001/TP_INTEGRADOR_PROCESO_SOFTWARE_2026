@@ -7,7 +7,8 @@ public class PanelMenu extends JPanel {
     public interface AccionMenu {
         void alIniciarJuego();
     }
-    private final CargadorRecursos cargador = new CargadorRecursos();
+    private final CargadorRecursos cargador = CargadorRecursos.getInstancia();
+
     public PanelMenu(AccionMenu accion) {
         this.setBackground(new Color(30, 30, 30));
         this.setLayout(new GridBagLayout());

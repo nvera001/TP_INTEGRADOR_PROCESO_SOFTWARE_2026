@@ -18,7 +18,7 @@ public class PanelJuego extends JPanel {
 
     public PanelJuego(Matriz matriz) {
         this.matriz = matriz;
-        this.cargador = new CargadorRecursos();
+        this.cargador = CargadorRecursos.getInstancia();
 
         this.setBackground(Color.BLACK);
     }

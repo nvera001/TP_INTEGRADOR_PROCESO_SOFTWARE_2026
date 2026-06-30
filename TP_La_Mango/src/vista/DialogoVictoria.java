@@ -23,7 +23,7 @@ public class DialogoVictoria extends JDialog {
         String puntajeFormateado = String.format("%5d", puntaje);
 
         JPanel panel = new JPanel(new BorderLayout(10, 10)) {
-            private final CargadorRecursos cargador = new CargadorRecursos();
+            private final CargadorRecursos cargador = CargadorRecursos.getInstancia();
 
             @Override
             protected void paintComponent(Graphics g) {

@@ -1,11 +1,12 @@
 package Modelo.Fabricas;
 
 import Modelo.Entidades.GameObject;
-import Modelo.Entidades.Jugador;
+import Modelo.Entidades.MuroCerrado;
 import Modelo.Nucleo.Posicion;
 
-public class CreadorJugador implements CreadorGameObject{
+public class CreadorMuroCerrado implements CreadorGameObject {
+    @Override
     public GameObject crearGameObject(Posicion posicion) {
-        return Jugador.inicializar(posicion);
+        return new MuroCerrado(posicion);
     }
 }

@@ -128,18 +128,6 @@ public class Matriz {
         return true;
     }
 
-    public Jugador obtenerJugador() {
-        for (int y = 0; y < filas; y++) {
-            for (int x = 0; x < columnas; x++) {
-                GameObject obj = grilla[y][x];
-                if (obj instanceof Jugador) {
-                    return (Jugador) obj;
-                }
-            }
-        }
-        return null;
-    }
-
     public void eliminarObjeto(Posicion pos) {
         if (pos.getX() >= 0 && pos.getX() < columnas && pos.getY() >= 0 && pos.getY() < filas) {
             grilla[pos.getY()][pos.getX()] = null;

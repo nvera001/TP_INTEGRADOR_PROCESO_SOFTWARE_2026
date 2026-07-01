@@ -105,7 +105,7 @@ public class PanelMenu extends JPanel {
                 + "     El objetivo es simple pero desafiante: tenés que empujar todas las <b>cajas</b> hasta los <b>destinos azules</b>."
                 + "  </p>"
                 + "  <div style='padding-left: 45px; padding-right: 45px;'>"
-                + "     <font color='#F1C40F'><b>• Empujar:</b></font> Solo podés mover las cajas hacia adelante.<br><br>"
+                + "     <font color='#F1C40F'><b>• Múltiples cajas:</b></font> Varios tipos de caja, con funcionalidades distintas.<br><br>"
                 + "     <font color='#F1C40F'><b>• Fuerza limitada:</b></font> No podés empujar más de una caja a la vez.<br><br>"
                 + "     <font color='#F1C40F'><b>• Zonas trampa:</b></font> Si pegás una caja en una esquina, quedará bloqueada.<br><br>"
                 + "     <font color='#F1C40F'><b>• Controles:</b></font> Usá las flechas del teclado para moverte.<br><br>"

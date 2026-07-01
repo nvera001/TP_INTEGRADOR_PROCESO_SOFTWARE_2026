@@ -25,7 +25,6 @@ public class DialogoVictoria extends JDialog {
         JPanel panel = new JPanel(new BorderLayout(10, 10)) {
             private final CargadorRecursos cargador = CargadorRecursos.getInstancia();
 
-            @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 if (nivel == 3) {
@@ -43,9 +42,8 @@ public class DialogoVictoria extends JDialog {
             }
         };
 
-        if (nivel != 3) {
-            panel.setBackground(new Color(25, 25, 25));
-        }
+        if (nivel != 3) {panel.setBackground(new Color(25, 25, 25));}
+
         panel.setBorder(BorderFactory.createLineBorder(new Color(243, 156, 18), 3));
 
         JLabel txtTitulo = new JLabel(nivel == 3 ? "¡JUEGO COMPLETADO!" : "¡NIVEL COMPLETADO!", SwingConstants.CENTER);

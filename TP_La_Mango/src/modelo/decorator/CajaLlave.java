@@ -7,10 +7,6 @@ public class CajaLlave extends CajaDecorador {
         super(caja, 'K');
     }
 
-    public CajaLlave(Caja caja, char simbolo) {
-        super(caja, simbolo);
-    }
-
     public boolean contieneLlave() {
         return true;
     }

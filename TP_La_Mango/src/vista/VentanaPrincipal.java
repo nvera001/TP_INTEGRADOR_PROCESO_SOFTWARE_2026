@@ -86,7 +86,7 @@ public class VentanaPrincipal extends JFrame {
         hudSuperior.add(btnVolumen);
 
         JButton btnMaquinaTiempo = new JButton("Máquina del Tiempo [T]");
-        btnMaquinaTiempo.setBackground(new Color(46, 204, 113)); // Color verde llamativo
+        btnMaquinaTiempo.setBackground(new Color(46, 204, 113));
         btnMaquinaTiempo.setForeground(Color.WHITE);
         btnMaquinaTiempo.setFocusable(false);
         btnMaquinaTiempo.addActionListener(e -> gestor.viajarEnElTiempo());

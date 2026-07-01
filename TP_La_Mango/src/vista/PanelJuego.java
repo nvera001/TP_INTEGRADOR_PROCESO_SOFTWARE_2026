@@ -16,7 +16,6 @@ public class PanelJuego extends JPanel {
     public PanelJuego(Matriz matriz) {
         this.matriz = matriz;
         this.cargador = CargadorRecursos.getInstancia();
-
         this.setBackground(Color.BLACK);
     }
 
@@ -57,13 +56,11 @@ public class PanelJuego extends JPanel {
                 int px = offsetX + (x * tileSize);
                 int py = offsetY + (y * tileSize);
 
-                // 1. Siempre se dibuja el piso base
                 Image imgPiso = cargador.getImagen("piso");
                 if (imgPiso != null) {
                     g.drawImage(imgPiso, px, py, tileSize, tileSize, null);
                 }
 
-                // 2. Capa Estática de Suelo (Polimórfica)
                 if (matriz.esMeta(posActual)) {
                     g.drawImage(cargador.getImagen("meta"), px, py, tileSize, tileSize, null);
                 } else if (matriz.esCerrojo(posActual)) {

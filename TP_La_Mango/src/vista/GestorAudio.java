@@ -5,9 +5,7 @@ import java.net.URL;
 
 public class GestorAudio {
     private static boolean sonidoActivo = true;
-
     private long tiempoUltimoSonido = 0;
-
     private final int TIEMPO_ESPERA = 300;
 
     public static void toggleSonido() {

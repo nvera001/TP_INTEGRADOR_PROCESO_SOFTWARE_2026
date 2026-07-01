@@ -14,20 +14,14 @@ public abstract class CajaDecorador extends GameObject implements Caja {
         this.cajaEnvoltorio = caja;
     }
 
-    public CapaJuego getCapa() {
-        return CapaJuego.ELEMENTO;
-    }
+    public CapaJuego getCapa() {return CapaJuego.ELEMENTO;}
 
-    @Override
     public void setPosicion(Posicion posicion) {
         super.setPosicion(posicion);
         cajaEnvoltorio.setPosicion(posicion);
     }
 
-    @Override
-    public boolean serEmpujada(Direccion dir, Matriz matriz, GameObject entidadA_Mover) {
-        return cajaEnvoltorio.serEmpujada(dir, matriz, entidadA_Mover);
-    }
+    public boolean serEmpujada(Direccion dir, Matriz matriz, GameObject entidadA_Mover) {return cajaEnvoltorio.serEmpujada(dir, matriz, entidadA_Mover);}
 
     public boolean contieneLlave() {
         return cajaEnvoltorio.contieneLlave();

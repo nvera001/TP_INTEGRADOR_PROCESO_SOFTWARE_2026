@@ -13,8 +13,6 @@ public class Matriz {
     private final int columnas;
     private boolean murosAbiertos = false;
 
-    private Matriz estado;
-
     public Matriz(int filas, int columnas) {
         this.filas = filas;
         this.columnas = columnas;
@@ -154,10 +152,6 @@ public class Matriz {
 
     public Posicion obtenerPosicionJugador() {
         return Jugador.getInstancia().getPosicion();
-    }
-
-    public Memento guardar() {
-        return new Memento(this.capaElementos);
     }
 
     public void restaurarCajas(Memento memento) {

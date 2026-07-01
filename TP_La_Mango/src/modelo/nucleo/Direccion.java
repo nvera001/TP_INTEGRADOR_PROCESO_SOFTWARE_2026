@@ -17,7 +17,6 @@ public enum Direccion {
     public int getDeltaX() { 
         return deltaX; 
     }
-    
     public int getDeltaY() { 
         return deltaY; 
     }

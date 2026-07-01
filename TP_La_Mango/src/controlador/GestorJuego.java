@@ -141,6 +141,7 @@ public class GestorJuego {
         if (maquinaDelTiempo != null) {
             maquinaDelTiempo.restaurarCajas();
 
+            audio.reproducirSonido("maquina.wav");
             if (ventana != null) {
                 ventana.actualizarPantalla();
                 ventana.actualizarHUD();

@@ -1,27 +1,42 @@
 package modelo.nucleo;
 
 import modelo.entidades.*;
-import java.util.ArrayList;
-import java.util.List;
+import modelo.memento.Memento;
 
 public class Matriz {
 
     private final GameObject[][] capaSuelo;
     private final GameObject[][] capaElementos;
+    private final boolean[][] grillaMonedas;
 
     private final int filas;
     private final int columnas;
     private boolean murosAbiertos = false;
+
+    private Matriz estado;
 
     public Matriz(int filas, int columnas) {
         this.filas = filas;
         this.columnas = columnas;
         this.capaSuelo = new GameObject[filas][columnas];
         this.capaElementos = new GameObject[filas][columnas];
+        this.grillaMonedas = new boolean[filas][columnas];
     }
 
     public int getFilas() { return this.filas; }
     public int getColumnas() { return this.columnas; }
+    public GameObject[][] getCapaElementos() { return this.capaElementos; }
+
+    public void marcarComoMonedaFoto(Posicion pos) {
+        if (!esPosicionInvalida(pos)) {
+            this.grillaMonedas[pos.getY()][pos.getX()] = true;
+        }
+    }
+
+    public boolean esMonedaFoto(Posicion pos) {
+        if (esPosicionInvalida(pos)) return false;
+        return this.grillaMonedas[pos.getY()][pos.getX()];
+    }
 
     public void colocarObjeto(GameObject obj) {
         Posicion pos = obj.getPosicion();
@@ -46,7 +61,6 @@ public class Matriz {
                 return suelo;
             }
         }
-
         return null;
     }
 
@@ -136,5 +150,58 @@ public class Matriz {
 
     private boolean esPosicionInvalida(Posicion pos) {
         return pos.getX() < 0 || pos.getX() >= columnas || pos.getY() < 0 || pos.getY() >= filas;
+    }
+
+    public Posicion obtenerPosicionJugador() {
+        for (int y = 0; y < filas; y++) {
+            for (int x = 0; x < columnas; x++) {
+                GameObject obj = capaElementos[y][x];
+                if (obj != null && obj.getSimbolo() == '@') {
+                    return new Posicion(x, y);
+                }
+            }
+        }
+        return null;
+    }
+
+    public Memento guardar() {
+        return new Memento(this.capaElementos);
+    }
+
+    public void restaurarCajas(Memento memento) {
+        GameObject jugadorActual = null;
+        Posicion posJugadorActual = obtenerPosicionJugador();
+        if (posJugadorActual != null) {
+            jugadorActual = capaElementos[posJugadorActual.getY()][posJugadorActual.getX()];
+        }
+
+        for (int y = 0; y < filas; y++) {
+            for (int x = 0; x < columnas; x++) {
+                if (capaElementos[y][x] instanceof Caja) {
+                    capaElementos[y][x] = null;
+                }
+            }
+        }
+
+        GameObject[][] cajasGuardadas = memento.getEstadoCajas();
+        for (int y = 0; y < filas; y++) {
+            for (int x = 0; x < columnas; x++) {
+                GameObject caja = cajasGuardadas[y][x];
+                if (caja != null) {
+                    if (posJugadorActual != null && posJugadorActual.getX() == x && posJugadorActual.getY() == y) {
+                        caja.setPosicion(new Posicion(x, y));
+                    } else {
+                        capaElementos[y][x] = caja;
+                        caja.setPosicion(new Posicion(x, y));
+                    }
+                }
+            }
+        }
+
+        if (jugadorActual != null && posJugadorActual != null) {
+            capaElementos[posJugadorActual.getY()][posJugadorActual.getX()] = jugadorActual;
+        }
+
+        actualizarEstadoMuros();
     }
 }

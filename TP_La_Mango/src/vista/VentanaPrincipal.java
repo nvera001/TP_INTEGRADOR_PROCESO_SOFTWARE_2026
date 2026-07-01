@@ -50,6 +50,7 @@ public class VentanaPrincipal extends JFrame {
                             gestor.deshacerCincoMovimientos();
                         }
                     }
+                    case KeyEvent.VK_T -> gestor.viajarEnElTiempo();
                     case KeyEvent.VK_S -> alternarSonido();
                 }
             }
@@ -85,9 +86,15 @@ public class VentanaPrincipal extends JFrame {
         btnVolumen.setBackground(GestorAudio.isSonidoActivo() ? new Color(52, 73, 94) : new Color(127, 140, 141));
         btnVolumen.setForeground(Color.WHITE);
         btnVolumen.setFocusable(false);
-
         btnVolumen.addActionListener(e -> alternarSonido());
         hudSuperior.add(btnVolumen);
+
+        JButton btnMaquinaTiempo = new JButton("Máquina del Tiempo [T]");
+        btnMaquinaTiempo.setBackground(new Color(46, 204, 113)); // Color verde llamativo
+        btnMaquinaTiempo.setForeground(Color.WHITE);
+        btnMaquinaTiempo.setFocusable(false);
+        btnMaquinaTiempo.addActionListener(e -> gestor.viajarEnElTiempo());
+        hudSuperior.add(btnMaquinaTiempo);
 
         btnUndo = new JButton("Deshacer [Z]");
         btnUndo.setBackground(new Color(155, 89, 182));

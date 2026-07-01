@@ -48,6 +48,11 @@ public class SokobanBuilderMatriz implements MatrizBuilder {
     }
 
     @Override
+    public void construirMonedaFoto(Posicion pos) {
+        matriz.marcarComoMonedaFoto(pos);
+    }
+
+    @Override
     public void construirCaja(char tipoCaja, Posicion pos) {
         // Envia 'C', 'F', 'K' o 'Z' al traductor para que el decorador actúe
         matriz.colocarObjeto(traductor.instanciarDesdeCaracter(tipoCaja, pos));

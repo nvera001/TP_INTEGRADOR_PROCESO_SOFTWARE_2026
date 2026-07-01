@@ -36,6 +36,7 @@ public class GeneradorNivel {
                     case 'S' -> builder.construirTerrenoResbaladizo(pos);
                     case 'L' -> builder.construirCerrojo(pos);
                     case 'M' -> builder.construirMuroCerrado(pos);
+                    case 'O' -> builder.construirMonedaFoto(pos);
                     case 'C', 'F', 'K', 'Z' -> builder.construirCaja(caracterActual, pos);
                     default -> {
                     }

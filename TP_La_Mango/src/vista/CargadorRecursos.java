@@ -40,8 +40,8 @@ public class CargadorRecursos {
             imagenes.put("cerrojo", leerImagen("/vista/recursos/imagenes/cerrojo.png"));
             imagenes.put("muro", leerImagen("/vista/recursos/imagenes/muro.png"));
             imagenes.put("resbaladizo", leerImagen("/vista/recursos/imagenes/resbaladizo.png"));
+            imagenes.put("moneda", leerImagen("/vista/recursos/imagenes/moneda.png"));
 
-            System.out.println("¡Todas las imágenes se cargaron con éxito en el caché del Singleton!");
         } catch (IOException e) {
             System.err.println("Error crítico: No se pudo cargar algún asset del Sokoban.");
             e.printStackTrace();

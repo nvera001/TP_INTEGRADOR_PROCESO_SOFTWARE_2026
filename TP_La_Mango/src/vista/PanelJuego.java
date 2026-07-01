@@ -70,6 +70,8 @@ public class PanelJuego extends JPanel {
                     g.drawImage(cargador.getImagen("cerrojo"), px, py, tileSize, tileSize, null);
                 } else if (matriz.esResbaladizo(posActual)) {
                     g.drawImage(cargador.getImagen("resbaladizo"), px, py, tileSize, tileSize, null);
+                } else if (matriz.esMonedaFoto(posActual)) {
+                    g.drawImage(cargador.getImagen("moneda"), px, py, tileSize, tileSize, null);
                 } else if (matriz.esMuro(posActual)) {
                     if (!matriz.MurosAbiertos()) {
                         g.drawImage(cargador.getImagen("muro"), px, py, tileSize, tileSize, null);

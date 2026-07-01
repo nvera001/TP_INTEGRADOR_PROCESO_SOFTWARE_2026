@@ -11,6 +11,7 @@ public interface MatrizBuilder {
     void construirTerrenoResbaladizo(Posicion pos);
     void construirCerrojo(Posicion pos);
     void construirMuroCerrado(Posicion pos);
+    void construirMonedaFoto(Posicion pos);
     void construirCaja(char tipoCaja, Posicion pos);
 
     Matriz getResultado();

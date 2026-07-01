@@ -1,6 +1,7 @@
 package controlador;
 
 import modelo.archivos.LectorTXT;
+import modelo.nucleo.Posicion;
 import modelo.builder.GeneradorNivel;
 import modelo.nucleo.Matriz;
 import modelo.nucleo.Direccion;
@@ -8,6 +9,7 @@ import vista.VentanaPrincipal;
 import vista.GestorAudio;
 import vista.DialogoVictoria;
 import modelo.command.GestorTablero;
+import modelo.memento.MaquinaDelTiempo;
 
 public class GestorJuego {
     private final String[] rutasNiveles = {
@@ -15,6 +17,9 @@ public class GestorJuego {
             "/modelo/mapas/mapa2.txt",
             "/modelo/mapas/mapa3.txt"
     };
+
+    private Matriz matrizActual;
+    private modelo.memento.MaquinaDelTiempo maquinaDelTiempo;
 
     private int indiceNivelActual = 0;
     private VentanaPrincipal ventana;
@@ -75,18 +80,40 @@ public class GestorJuego {
 
         lector.cargarArchivo(rutasNiveles[indice]);
         String datos = lector.getCadena();
-        Matriz matrizOriginal = generador.generarMatrizDesdeString(datos);
 
-        this.gestorTablero = new GestorTablero(matrizOriginal, estadisticas, audio, ventana, this);
+        this.matrizActual = generador.generarMatrizDesdeString(datos);
+
+        this.maquinaDelTiempo = new MaquinaDelTiempo(this.matrizActual);
+
+        this.gestorTablero = new GestorTablero(this.matrizActual, estadisticas, audio, ventana, this);
 
         if (ventana != null) {
-            ventana.mostrarPantallaJuego(matrizOriginal);
+            ventana.mostrarPantallaJuego(this.matrizActual);
         }
     }
 
     public void intentarMover(Direccion dir) {
         if (gestorTablero != null) {
+            // 1. Ejecuta el movimiento regular del jugador/cajas
             gestorTablero.intentarMover(dir);
+
+            // 2. ESCANEO DE MONEDA: ¿El jugador pisó el checkpoint 'O'?
+            Posicion posJugador = matrizActual.obtenerPosicionJugador();
+            if (posJugador != null && matrizActual.esMonedaFoto(posJugador)) {
+                maquinaDelTiempo.registrarFoto();
+            }
+        }
+    }
+
+    public void viajarEnElTiempo() {
+        if (maquinaDelTiempo != null) {
+            maquinaDelTiempo.restaurarCajas();
+            audio.reproducirSonido("resbaladizo.wav"); // Sonido especial de viaje temporal
+
+            if (ventana != null) {
+                ventana.actualizarPantalla();
+                ventana.actualizarHUD();
+            }
         }
     }
 

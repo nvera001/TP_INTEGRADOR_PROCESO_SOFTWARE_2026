@@ -25,14 +25,23 @@ public class TraductorTXT {
         diccionarioCadenas.put('M', new CreadorMuroCerrado());
 
         diccionarioCadenas.put('C', new CreadorCajaSimple());
-        diccionarioCadenas.put('F', new CreadorCajaFragil());
-        diccionarioCadenas.put('K', new CreadorCajaLlave());
+
+        diccionarioCadenas.put('F', posicion -> {
+            Caja base = new CajaSimple(posicion);
+            Caja conFragilidad= new CajaFragil(base, 18);
+            return (GameObject) conFragilidad;
+        });
+
+        diccionarioCadenas.put('K', posicion -> {
+            Caja base = new CajaSimple(posicion);
+            Caja conLlave = new CajaLlave(base);
+            return (GameObject) conLlave;
+        });
 
         diccionarioCadenas.put('Z', posicion -> {
             Caja base = new CajaSimple(posicion);
             Caja conLlave = new CajaLlave(base);
             Caja conFragilidadYLlave = new CajaFragil(conLlave, 18, 'Z');
-
             return (GameObject) conFragilidadYLlave;
         });
     }

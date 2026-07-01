@@ -33,9 +33,9 @@ public class CargadorRecursos {
             imagenes.put("meta", leerImagen("/vista/recursos/imagenes/meta.png"));
             imagenes.put("fondo", leerImagen("/vista/recursos/imagenes/fondo.jpg"));
 
-            imagenes.put("caja_fragil", leerImagen("/vista/recursos/imagenes/caja_fragil.png"));
+            imagenes.put("caja_fragil", leerImagen("/vista/recursos/imagenes/caja_fragil_llave.png"));
             imagenes.put("caja_llave", leerImagen("/vista/recursos/imagenes/caja_llave.png"));
-            imagenes.put("caja_fragil_llave", leerImagen("/vista/recursos/imagenes/caja_fragil_llave.png"));
+            imagenes.put("caja_fragil_llave", leerImagen("/vista/recursos/imagenes/caja_fragil.png"));
 
             imagenes.put("cerrojo", leerImagen("/vista/recursos/imagenes/cerrojo.png"));
             imagenes.put("muro", leerImagen("/vista/recursos/imagenes/muro.png"));

@@ -30,7 +30,7 @@ public class ContadorEstadisticas {
     }
 
     public int calcularPuntaje(int cantUndoNivel) {
-        int base = 5000;
+        int base = 15000;
         int penalizacion = (movimientos * 10) + (empujes * 20) + (cantUndoNivel * 100);
         return Math.max(100, base - penalizacion);
     }

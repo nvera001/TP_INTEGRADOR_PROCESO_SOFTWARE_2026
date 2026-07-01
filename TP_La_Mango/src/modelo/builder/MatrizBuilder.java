@@ -4,6 +4,8 @@ import modelo.nucleo.Matriz;
 import modelo.nucleo.Posicion;
 
 public interface MatrizBuilder {
+    Matriz getResultado();
+
     void reset(int filas, int columnas);
     void construirPared(Posicion pos);
     void construirJugador(Posicion pos);
@@ -13,6 +15,4 @@ public interface MatrizBuilder {
     void construirMuroCerrado(Posicion pos);
     void construirMonedaFoto(Posicion pos);
     void construirCaja(char tipoCaja, Posicion pos);
-
-    Matriz getResultado();
 }

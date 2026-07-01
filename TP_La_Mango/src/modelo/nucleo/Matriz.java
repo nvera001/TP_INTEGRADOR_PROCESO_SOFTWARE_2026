@@ -153,15 +153,7 @@ public class Matriz {
     }
 
     public Posicion obtenerPosicionJugador() {
-        for (int y = 0; y < filas; y++) {
-            for (int x = 0; x < columnas; x++) {
-                GameObject obj = capaElementos[y][x];
-                if (obj != null && obj.getSimbolo() == '@') {
-                    return new Posicion(x, y);
-                }
-            }
-        }
-        return null;
+        return Jugador.getInstancia().getPosicion();
     }
 
     public Memento guardar() {

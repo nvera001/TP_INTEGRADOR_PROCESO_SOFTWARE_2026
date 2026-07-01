@@ -12,54 +12,43 @@ public class SokobanBuilderMatriz implements MatrizBuilder {
         this.traductor = new TraductorTXT();
     }
 
-    @Override
-    public void reset(int filas, int columnas) {
+     public void reset(int filas, int columnas) {
         this.matriz = new Matriz(filas, columnas);
     }
 
-    @Override
-    public void construirPared(Posicion pos) {
+     public void construirPared(Posicion pos) {
         matriz.colocarObjeto(traductor.instanciarDesdeCaracter('#', pos));
     }
 
-    @Override
-    public void construirJugador(Posicion pos) {
+     public void construirJugador(Posicion pos) {
         matriz.colocarObjeto(traductor.instanciarDesdeCaracter('P', pos));
     }
 
-    @Override
-    public void construirMeta(Posicion pos) {
+     public void construirMeta(Posicion pos) {
         matriz.colocarObjeto(traductor.instanciarDesdeCaracter('X', pos));
     }
 
-    @Override
-    public void construirTerrenoResbaladizo(Posicion pos) {
+     public void construirTerrenoResbaladizo(Posicion pos) {
         matriz.colocarObjeto(traductor.instanciarDesdeCaracter('S', pos));
     }
 
-    @Override
-    public void construirCerrojo(Posicion pos) {
+     public void construirCerrojo(Posicion pos) {
         matriz.colocarObjeto(traductor.instanciarDesdeCaracter('L', pos));
     }
 
-    @Override
-    public void construirMuroCerrado(Posicion pos) {
+     public void construirMuroCerrado(Posicion pos) {
         matriz.colocarObjeto(traductor.instanciarDesdeCaracter('M', pos));
     }
 
-    @Override
-    public void construirMonedaFoto(Posicion pos) {
+     public void construirMonedaFoto(Posicion pos) {
         matriz.marcarComoMonedaFoto(pos);
     }
 
-    @Override
-    public void construirCaja(char tipoCaja, Posicion pos) {
-        // Envia 'C', 'F', 'K' o 'Z' al traductor para que el decorador actúe
+     public void construirCaja(char tipoCaja, Posicion pos) {
         matriz.colocarObjeto(traductor.instanciarDesdeCaracter(tipoCaja, pos));
     }
 
-    @Override
-    public Matriz getResultado() {
+     public Matriz getResultado() {
         return this.matriz;
     }
 }

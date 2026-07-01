@@ -5,6 +5,15 @@ public class ContadorEstadisticas {
     private int empujes = 0;
     private int segundosTranscurridos = 0;
 
+    public String getTiempoFormateado() {
+        int horas = segundosTranscurridos / 3600;
+        int minutos = (segundosTranscurridos % 3600) / 60;
+        int segundos = segundosTranscurridos % 60;
+        return String.format("%d:%02d:%02d", horas, minutos, segundos);
+    }
+    public int getMovimientos() { return movimientos; }
+    public int getEmpujes() { return empujes; }
+
     public void registrarMovimiento() {
         movimientos++;
     }
@@ -14,11 +23,9 @@ public class ContadorEstadisticas {
     public void incrementarSegundo() {
         segundosTranscurridos++;
     }
-
     public void decrementarMovimiento() {
         if (movimientos > 0) movimientos--;
     }
-
     public void decrementarEmpuje() {
         if (empujes > 0) empujes--;
     }
@@ -35,13 +42,4 @@ public class ContadorEstadisticas {
         return Math.max(100, base - penalizacion);
     }
 
-    public String getTiempoFormateado() {
-        int horas = segundosTranscurridos / 3600;
-        int minutos = (segundosTranscurridos % 3600) / 60;
-        int segundos = segundosTranscurridos % 60;
-        return String.format("%d:%02d:%02d", horas, minutos, segundos);
-    }
-
-    public int getMovimientos() { return movimientos; }
-    public int getEmpujes() { return empujes; }
 }

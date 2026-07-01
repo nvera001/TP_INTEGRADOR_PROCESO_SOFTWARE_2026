@@ -10,10 +10,6 @@ public class GeneradorNivel {
         this.builder = new SokobanBuilderMatriz();
     }
 
-    public void setBuilder(MatrizBuilder builder) {
-        this.builder = builder;
-    }
-
     public Matriz generarMatrizDesdeString(String mapaString) {
         String[] lineas = mapaString.split("\\r?\\n");
 

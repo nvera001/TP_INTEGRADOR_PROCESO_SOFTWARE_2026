@@ -23,6 +23,7 @@ public class GestorJuego {
 
     private int indiceNivelActual = 0;
     private VentanaPrincipal ventana;
+
     private final LectorTXT lector;
     private final GeneradorNivel generador;
     private final GestorAudio audio;
@@ -38,24 +39,22 @@ public class GestorJuego {
         this.estadisticas = new ContadorEstadisticas();
     }
 
-    public void setVentana(VentanaPrincipal ventana) {
-        this.ventana = ventana;
-    }
+    public int getNivelActual() { return indiceNivelActual + 1; }
+    public int getMovimientos() { return estadisticas.getMovimientos(); }
+    public int getEmpujes() { return estadisticas.getEmpujes(); }
+    public String getTiempoFormateado() { return estadisticas.getTiempoFormateado(); }
+
+    public void setVentana(VentanaPrincipal ventana) {this.ventana = ventana;}
 
     public void iniciarJuego() {
         indiceNivelActual = 0;
         cargarNivel(indiceNivelActual);
     }
 
-    public void reiniciarNivel() {
-        cargarNivel(indiceNivelActual);
-    }
+    public void reiniciarNivel() {cargarNivel(indiceNivelActual);}
 
     public void volverAlMenu() {
-        if (ventana != null) {
-            ventana.mostrarMenuPrincipal();
-        }
-    }
+        if (ventana != null) {ventana.mostrarMenuPrincipal();}}
 
     private void cargarNivel(int indice) {
         if (indice >= rutasNiveles.length) {
@@ -82,9 +81,7 @@ public class GestorJuego {
         String datos = lector.getCadena();
 
         this.matrizActual = generador.generarMatrizDesdeString(datos);
-
         this.maquinaDelTiempo = new MaquinaDelTiempo(this.matrizActual);
-
         this.gestorTablero = new GestorTablero(this.matrizActual, estadisticas, audio, ventana, this);
 
         if (ventana != null) {
@@ -94,25 +91,11 @@ public class GestorJuego {
 
     public void intentarMover(Direccion dir) {
         if (gestorTablero != null) {
-            // 1. Ejecuta el movimiento regular del jugador/cajas
             gestorTablero.intentarMover(dir);
 
-            // 2. ESCANEO DE MONEDA: ¿El jugador pisó el checkpoint 'O'?
             Posicion posJugador = matrizActual.obtenerPosicionJugador();
             if (posJugador != null && matrizActual.esMonedaFoto(posJugador)) {
                 maquinaDelTiempo.registrarFoto();
-            }
-        }
-    }
-
-    public void viajarEnElTiempo() {
-        if (maquinaDelTiempo != null) {
-            maquinaDelTiempo.restaurarCajas();
-            audio.reproducirSonido("resbaladizo.wav"); // Sonido especial de viaje temporal
-
-            if (ventana != null) {
-                ventana.actualizarPantalla();
-                ventana.actualizarHUD();
             }
         }
     }
@@ -136,13 +119,11 @@ public class GestorJuego {
                 calcularPuntaje(),
                 getTiempoFormateado(),
                 new DialogoVictoria.AccionVictoria() {
-                    @Override
                     public void avanzarSiguienteNivel() {
                         indiceNivelActual++;
                         cargarNivel(indiceNivelActual);
                     }
 
-                    @Override
                     public void volverAlMenu() {
                         GestorJuego.this.volverAlMenu();
                     }
@@ -150,13 +131,20 @@ public class GestorJuego {
         );
         cartelVictoria.setVisible(true);
     }
-    public int getNivelActual() { return indiceNivelActual + 1; }
-    public int getMovimientos() { return estadisticas.getMovimientos(); }
-    public int getEmpujes() { return estadisticas.getEmpujes(); }
-    public String getTiempoFormateado() { return estadisticas.getTiempoFormateado(); }
 
     public int calcularPuntaje() {
         int undos = (gestorTablero != null) ? gestorTablero.getGestorHistorial().getCantUndoNivel() : 0;
         return estadisticas.calcularPuntaje(undos);
+    }
+
+    public void viajarEnElTiempo() {
+        if (maquinaDelTiempo != null) {
+            maquinaDelTiempo.restaurarCajas();
+
+            if (ventana != null) {
+                ventana.actualizarPantalla();
+                ventana.actualizarHUD();
+            }
+        }
     }
 }

@@ -14,7 +14,6 @@ public class LectorTXT {
         try (InputStream is = getClass().getResourceAsStream(rutaResource)) {
             if (is == null) {
                 System.out.println("Error: No se encontró el mapa en la ruta interna: " + rutaResource);
-                System.out.println("--> Verificá que el archivo esté exactamente en 'src" + rutaResource + "'");
                 return;
             }
 

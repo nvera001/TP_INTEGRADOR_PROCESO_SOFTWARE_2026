@@ -8,7 +8,6 @@ import controlador.GestorJuego;
 import modelo.nucleo.Direccion;
 import modelo.nucleo.Matriz;
 
-
 public class VentanaPrincipal extends JFrame {
     private final GestorJuego gestor;
     private boolean juegoIniciado = false;
@@ -23,13 +22,10 @@ public class VentanaPrincipal extends JFrame {
         this.gestor = gestor;
         setTitle("Sokoban ");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         setUndecorated(true);
 
         Dimension tamanioPantalla = Toolkit.getDefaultToolkit().getScreenSize();
-
         setBounds(0, 0, tamanioPantalla.width, tamanioPantalla.height);
-
         setMinimumSize(new Dimension(800, 600));
 
         mostrarMenuPrincipal();

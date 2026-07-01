@@ -21,7 +21,6 @@ public class ComandoMovimiento implements Comando {
         this.seRompioCaja = seRompioCaja;
     }
 
-    @Override
     public void deshacer(Matriz matriz) {
         matriz.moverObjeto(jugador, posViejaJugador);
 
@@ -29,7 +28,6 @@ public class ComandoMovimiento implements Comando {
             if (caja instanceof CajaFragil) {
                 ((CajaFragil) caja).incrementarResistencia();
             }
-
             if (seRompioCaja) {
                 caja.setPosicion(posViejaCaja);
                 matriz.colocarObjeto(caja);
@@ -39,7 +37,6 @@ public class ComandoMovimiento implements Comando {
         }
     }
 
-    @Override
     public boolean esEmpuje() {
         return caja != null;
     }
